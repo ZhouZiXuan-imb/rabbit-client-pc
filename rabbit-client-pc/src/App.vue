@@ -1,10 +1,29 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+    {{ user }}
+
+    <button @click="onSetUser">button</button>
   </div>
-  <router-view/>
 </template>
+
+<script lang="ts">
+import {defineComponent} from "vue"
+import {useStore} from "vuex";
+
+export default defineComponent({
+  setup() {
+    const store = useStore();
+    const user = store.state.user
+
+    const onSetUser = () => store.dispatch("user/useSetUser", {token: "test"});
+
+    return {
+      user,
+      onSetUser
+    }
+  }
+})
+</script>
 
 <style lang="less">
 #app {
