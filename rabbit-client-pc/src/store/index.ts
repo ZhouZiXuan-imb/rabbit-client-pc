@@ -5,11 +5,6 @@ import category from "@/store/category.ts";
 import user from "@/store/user.ts";
 
 export default createStore({
-  mutations:{
-    setState() {
-      console.log('111')
-    }
-  },
   modules: {
     cart,
     category,

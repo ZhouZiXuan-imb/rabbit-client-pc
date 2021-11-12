@@ -1,27 +1,12 @@
 <template>
-  <div>
-    {{ user }}
-
-    <button @click="onSetUser">button</button>
-  </div>
+  <RouterView/>
 </template>
 
 <script lang="ts">
+// 开启ts检查
 import {defineComponent} from "vue"
-import {useStore} from "vuex";
 
 export default defineComponent({
-  setup() {
-    const store = useStore();
-    const user = store.state.user
-
-    const onSetUser = () => store.dispatch("user/useSetUser", {token: "test"});
-
-    return {
-      user,
-      onSetUser
-    }
-  }
 })
 </script>
 

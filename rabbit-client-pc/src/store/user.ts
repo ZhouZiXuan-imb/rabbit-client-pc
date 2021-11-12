@@ -1,4 +1,7 @@
-type stateType = {
+// 声明state类型
+import {ActionContext} from "vuex";
+
+export type stateType = {
     profile: {
         // 用户id
         id: string,
@@ -14,10 +17,12 @@ type stateType = {
         token: string,
     }
 }
+
 export default {
     // 开启命名空间
-    namespace: true,
-    state() {
+    // namespace: true,
+    namespaced:true,
+    state():stateType {
         return {
             // 用户信息
             profile: {
@@ -42,7 +47,7 @@ export default {
         },
     },
     actions: {
-        useSetState(context: { commit: Function }, payload: stateType) {
+        useSetState(context: ActionContext<any, any>, payload: stateType) {
             context.commit('setUser', payload)
         }
     },

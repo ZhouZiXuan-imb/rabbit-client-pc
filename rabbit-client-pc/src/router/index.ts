@@ -1,19 +1,26 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
+// 使用懒加载方式引入Home页组件
+const HomePage = () => import('@/views/Home.vue');
+// 使用懒加载方式引入Category页组件
+const CategoryPage = () => import('@/views/Category.vue')
+// 使用懒加载方式引入Category页组件
+const CategoryTwo = () => import('@/views/CategoryTwo.vue')
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: HomePage,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/category/:id',
+    name: 'Category',
+    component: CategoryPage,
+  },
+  {
+    path: '/category/sub/:id',
+    name: 'CategorySub',
+    component: CategoryTwo,
   }
 ]
 
