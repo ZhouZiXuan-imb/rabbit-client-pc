@@ -2,12 +2,16 @@
   <nav class="app-top-nav">
     <div class="container">
       <ul>
-        <li>
-          <a href="javascript:"><i class="iconfont icon-user"></i>周杰伦</a>
-        </li>
-        <li><a href="javascript:">退出登录</a></li>
-        <li><a href="javascript:">请先登录</a></li>
-        <li><a href="javascript:">免费注册</a></li>
+        <template v-if="isLogin">
+          <li>
+            <a href="javascript:"><i class="iconfont icon-user"></i>周杰伦</a>
+          </li>
+          <li><a href="javascript:">退出登录</a></li>
+        </template>
+        <template v-else>
+          <li><a href="javascript:">请先登录</a></li>
+          <li><a href="javascript:">免费注册</a></li>
+        </template>
         <li><a href="javascript:">我的订单</a></li>
         <li><a href="javascript:">会员中心</a></li>
         <li><a href="javascript:">帮助中心</a></li>
@@ -21,9 +25,20 @@
 </template>
 
 <script>
-export default {
-  name: "AppTopNav"
-}
+import {defineComponent, computed} from "vue";
+import {useStore} from "vuex";
+
+export default defineComponent({
+  name: "AppTopNav",
+  setup() {
+    const store = useStore();
+    const isLogin = computed(() => store.state.user.profile.token);
+
+    return {
+      isLogin
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">

@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 // 使用懒加载方式引入Home页组件
-const HomePage = () => import('@/views/Home.vue');
+const HomePage = () => import('@/views/Home/Home.vue');
 // 使用懒加载方式引入Category页组件
-const CategoryPage = () => import('@/views/Category.vue')
+const TopCategoryPage = () => import('@/views/Category/TopCategory.vue')
 // 使用懒加载方式引入Category页组件
-const CategoryTwo = () => import('@/views/CategoryTwo.vue')
+const SubCategoryPage = () => import('@/views/Category/SubCategory.vue')
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -14,13 +14,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/category/:id',
-    name: 'Category',
-    component: CategoryPage,
+    name: 'TopCategoryPage',
+    component: TopCategoryPage,
   },
   {
     path: '/category/sub/:id',
-    name: 'CategorySub',
-    component: CategoryTwo,
+    name: 'SubCategoryPage',
+    component: SubCategoryPage,
   }
 ]
 

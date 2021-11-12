@@ -2,7 +2,7 @@
   <div :class="['layer', openVar?'open':'']">
     <ul>
       <li v-for="childrenItem in item.children" :key="childrenItem.id">
-        <RouterLink  @click="close(item.id)" :to="`/category/sub/${childrenItem.id}`">
+        <RouterLink  @click="emitParentClose(item.id)" :to="`/category/sub/${childrenItem.id}`">
           <img :src="childrenItem.picture" alt=""/>
           <p>{{ childrenItem.name }}</p>
         </RouterLink>
@@ -12,10 +12,21 @@
 </template>
 
 <script>
-export default {
+import {defineComponent} from "vue";
+
+export default defineComponent({
   name: "AppTwoCategory",
-  props: ['item', 'openVar', 'close']
-}
+  props: ['item', 'openVar', 'close'],
+  setup(props,{emit}) {
+    function emitParentClose(id) {
+      emit('close', id)
+    }
+
+    return {
+      emitParentClose
+    }
+  }
+});
 </script>
 
 <style scoped lang="less">

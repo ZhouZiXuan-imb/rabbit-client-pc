@@ -20,7 +20,7 @@ export default {
     state() {
         return {
             // 商品列表
-            categoryList: [] as categoryItemType
+            categoryList: []
         }
     },
     mutations: {
@@ -47,7 +47,6 @@ export default {
         async useSetCategoryList(context: ActionContext<any, any>) {
             const {data: {result}} = await homePageAPI.getCategoryList();
             const categoryList = result.map((item: any) => ({...item, ...{open: false}}))
-            console.log(categoryList)
             context.commit('setCategoryList', categoryList);
         }
     },

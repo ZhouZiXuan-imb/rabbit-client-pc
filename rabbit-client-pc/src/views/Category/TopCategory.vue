@@ -1,10 +1,10 @@
 <template>
-  <h2>CategoryTwo</h2>
+  <h2>TopCategory</h2>
 </template>
 
 <script>
 export default {
-  name: "CategoryTwo"
+  name: "TopCategory"
 }
 </script>
 
