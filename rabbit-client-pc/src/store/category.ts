@@ -1,26 +1,15 @@
-import {homePageAPI} from "@/utils/api";
+import {getCategoryList} from "@/api/api";
 import {ActionContext} from "vuex";
-
-type stateType = {
-    categoryList: Array<categoryItemType>
-}
-
-type categoryItemType = {
-    children?: Array<{}>;
-    goods?: Array<{}>;
-    id?: string;
-    name?: string;
-    open?: boolean;
-    picture?: string;
-}
+import {categoryItemType, stateType} from "@/store/categoryType.ts";
+import {categoryList} from "@/api/homeCategoryList.ts"
 
 export default {
     // 开启命名空间
     namespaced: true,
     state() {
         return {
-            // 商品列表
-            categoryList: []
+            // 商品列表; 数据还没来时，先渲染假数据占位，提升用户体验
+            categoryList: categoryList.map(item => item)
         }
     },
     mutations: {
@@ -45,7 +34,7 @@ export default {
     },
     actions: {
         async useSetCategoryList(context: ActionContext<any, any>) {
-            const {data: {result}} = await homePageAPI.getCategoryList();
+            const {data: {result}} = await getCategoryList();
             const categoryList = result.map((item: any) => ({...item, ...{open: false}}))
             context.commit('setCategoryList', categoryList);
         }

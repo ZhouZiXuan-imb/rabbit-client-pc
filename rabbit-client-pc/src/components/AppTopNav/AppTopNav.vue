@@ -6,10 +6,10 @@
           <li>
             <a href="javascript:"><i class="iconfont icon-user"></i>周杰伦</a>
           </li>
-          <li><a href="javascript:">退出登录</a></li>
+          <li><a href="javascript:" @click="logout">退出登录</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:">请先登录</a></li>
+          <li><a href="javascript:" @click="login">请先登录</a></li>
           <li><a href="javascript:">免费注册</a></li>
         </template>
         <li><a href="javascript:">我的订单</a></li>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {defineComponent, computed} from "vue";
+import {computed, defineComponent} from "vue";
 import {useStore} from "vuex";
 
 export default defineComponent({
@@ -34,8 +34,20 @@ export default defineComponent({
     const store = useStore();
     const isLogin = computed(() => store.state.user.profile.token);
 
+    // 退出登录
+    function logout() {
+      store.dispatch('user/useSetState', {token: ""});
+    }
+
+    // 登录
+    function login() {
+      store.dispatch('user/useSetState', {token:"test"})
+    }
+
     return {
-      isLogin
+      isLogin,
+      logout,
+      login,
     }
   }
 })

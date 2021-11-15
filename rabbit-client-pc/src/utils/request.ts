@@ -53,7 +53,7 @@ instanceWidthToken.interceptors.request.use((config: AxiosRequestConfig) => {
 // 带token的响应拦截器
 instanceWidthToken.interceptors.response.use((response) => {
     return response
-}, (error: AxiosError) => {
+}, async (error: AxiosError) => {
     if (error.response?.status === 401) {
         // 401 未授权
         // 1. 跳转到登录页
@@ -65,7 +65,7 @@ instanceWidthToken.interceptors.response.use((response) => {
             .catch(() => {
                 console.log("跳转失败");
             });
-        store.commit('user/setUser', {token:""})
+        await store.dispatch('user/useSetState', {token:""})
     }
     return Promise.reject(error);
 })
@@ -93,13 +93,13 @@ const request = methods.reduce((requestMethods, method) => {
         // ts好像不能自动识别循环中的变量，所以需要每次循环的时候判断
         switch (method) {
             case "get":
-                return instanceWidthToken[method](url, data)
+                return instanceWidthToken[method](url, {params: data})
             case "post":
                 return instanceWidthToken[method](url, data)
             case "put":
                 return instanceWidthToken[method](url, data)
             case "delete":
-                return instanceWidthToken[method](url, data)
+                return instanceWidthToken[method](url, {params: data})
         }
     }
     return requestMethods;
