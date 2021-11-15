@@ -56,26 +56,30 @@ import {categoryItemType} from "@/store/categoryType.ts";
 export default defineComponent({
   name: "HomeCategory",
   setup() {
+    // 引入store
     const store = useStore();
 
     // 声明一个接收二级分类商品的变量
     let current = ref<categoryItemType>();
-
+    // 定义一个变量接收推荐品牌
     const brand = ref({
       id: "brand",
       name: "品牌",
       children: [{name: "推荐品牌", id: "child-brand"}],
       brands: []
     });
+    // 修改store中categoryList的children属性的数据
     const list = computed(() => {
+      // 遍历categoryList，并返回一个修改后的新的数组
       const result = store.state.category.categoryList.map((item: categoryItemType) => ({
         ...item,
         children: item.children ? item.children.slice(0, 2) : null
       }))
+      // 把推荐品牌push到categoryList的children属性的数据中
       result.push(brand.value)
       return result
     });
-
+    // 获取推荐品牌数据
     getHotBrandsList(6).then(({data}) => {
       brand.value.brands = data.result;
     })
