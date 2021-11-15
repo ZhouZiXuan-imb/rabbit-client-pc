@@ -1,16 +1,16 @@
 <template>
   <div class="home-banner">
-    <XtxCarousel :autoPlay="true" :carousels="[]" :duration="3000"/>
+    <XtxCarousel :autoPlay="true" :carousels="carousels" :duration="3000"/>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {defineComponent,  ref} from "vue";
 import {getBannerList} from "@/api/api";
 
 export default defineComponent({
   name: "HomeBanner",
-  setup() {
+  async setup() {
     // 声明bannerList中每个对象中属性的类型
     type bannerListItemType = {
       hrefUrl: string;
@@ -19,13 +19,16 @@ export default defineComponent({
       type: string;
     }
     // 声明bannerList的类型
-    type bannerListType = Array<bannerListItemType>;
+    type carouselsListType = Array<bannerListItemType>;
     // 声明变量接收轮播图数据
-    const bannerList = ref<bannerListType>([]);
+    let carousels = ref<carouselsListType>([]);
     // 获取轮播图数据
-    getBannerList(1).then(({data}) => {
-      bannerList.value = data.result;
-    })
+    const {data:{result}} = await getBannerList(1)
+    carousels.value = result;
+
+    return {
+      carousels
+    }
   }
 });
 </script>

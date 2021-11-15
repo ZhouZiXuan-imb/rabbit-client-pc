@@ -2,7 +2,10 @@
   <AppLayout>
     <div class="container">
       <HomeCategory/>
-      <HomeBanner/>
+      <!--   强制让setup同步的组件   -->
+      <Suspense>
+        <HomeBanner/>
+      </Suspense>
     </div>
   </AppLayout>
 </template>

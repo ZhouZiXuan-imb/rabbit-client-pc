@@ -1,7 +1,7 @@
 <template>
-  <div class="xtx-carousel">
+  <div class="xtx-carousel" @mouseenter="stopAutoPlay" @mouseleave="startAutoPlay">
     <ul class="carousel-body">
-      <li :class="['carousel-item', activeIndex === index?'fade':'']" v-for="(item,index) in bannerList">
+      <li :class="['carousel-item', activeIndex === index?'fade':'']" v-for="(item,index) in carousels">
         <RouterLink to="/">
           <img
               :src="item.imgUrl"
@@ -17,14 +17,14 @@
     ><i class="iconfont icon-angle-right"></i
     ></a>
     <div class="carousel-indicator">
-      <span v-for="(item,index) in bannerList" :key="item" :class="{active: index === activeIndex}"
+      <span v-for="(item,index) in carousels" :key="item" :class="{active: index === activeIndex}"
             @click="onClickIndicator(index)"></span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {computed, defineComponent} from "vue";
 import {useBannerToggle} from "./useBannerToggle"
 
 export default defineComponent({
@@ -41,16 +41,19 @@ export default defineComponent({
       type: Number,
       default: 3000
     }
-
   },
   setup(props) {
-    const {activeIndex, bannerList, onClickIndicator, toggle} = useBannerToggle({carousels:props.carousels, autoPlay:props.autoPlay, duration: props.duration});
+    // 使用computed监听carousels，因为carousels是异步传来的，不使用computed监听拿不到值
+    const carouselsList = computed(() => props.carousels);
+
+    const {activeIndex, onClickIndicator, toggle, startAutoPlay, stopAutoPlay} = useBannerToggle({carousels: carouselsList, autoPlay:props.autoPlay, duration: props.duration});
 
     return {
       activeIndex,
-      bannerList,
       onClickIndicator,
-      toggle
+      toggle,
+      startAutoPlay,
+      stopAutoPlay
     }
   }
 });

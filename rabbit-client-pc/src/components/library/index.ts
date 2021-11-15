@@ -1,4 +1,4 @@
-import XtxSkeleton from "@/components/library/XtxSkeleton.vue";
+import XtxSkeleton from "@/components/library/XtxSkeleton/XtxSkeleton.vue";
 import XtxCarousel from "@/components/library/XtxCarousel/XtxCarousel.vue";
 
 export default {
