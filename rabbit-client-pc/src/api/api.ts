@@ -24,6 +24,38 @@ export function getHotBrandsList(limit: number = 6): AxiosPromise {
  * @param distributionSite 广告区域展示位置（投放位置 投放位置，1为首页，2为分类商品页） 默认是1
  * @return {Promise}
  */
-export function getBannerList(distributionSite:number = 1) {
+export function getBannerList(distributionSite: number = 1) {
     return request.get('/home/banner', {distributionSite})
+}
+
+/**
+ *
+ * @param limit 一次获取多少条数据
+ * @return {Promise}
+ */
+export function getNewGoodsList(limit: number = 4) {
+    return request.get('/home/new', {limit});
+}
+
+/**
+ *
+ * 获取首页人气推荐数据
+ * @return {Promise}
+ */
+export function getHotRecommend() {
+    return request.get('/home/hot')
+}
+
+/**
+ *
+ * 获取产品区块数据
+ * @return {Promise}
+ */
+export function getHomeGoodsList() {
+    return request.get('/home/goods');
+}
+
+
+export function getSpecialList(limit: number = 3) {
+    return request.get('/home/special', {limit});
 }

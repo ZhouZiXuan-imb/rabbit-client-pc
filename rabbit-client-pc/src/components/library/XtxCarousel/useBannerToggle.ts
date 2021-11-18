@@ -34,7 +34,6 @@ export function useBannerToggle(options: { carousels: ComputedRefValue<any>, aut
     function startAutoPlay() {
         // 判断是否开启自动轮播，并且轮播图数据数组长度大于1(两天图片及以上才可以轮播)
         if (autoPlay && carouselsList.value.length > 1) {
-            console.log(222)
             // 开启定时器
             timer = setInterval(() => {
                 // 调用切换轮播图方法

@@ -1,0 +1,60 @@
+<template>
+  <div class="home-panel">
+    <div class="container">
+      <div class="head">
+        <h3>
+          {{ title }}<small>{{ subTitle }}</small>
+        </h3>
+        <slot name="right"></slot>
+      </div>
+      <slot name="default"></slot>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+
+export default defineComponent({
+  name: "HomePanel",
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
+    subTitle: {
+      type: String,
+      default: "",
+    },
+  },
+  setup() {
+
+  }
+});
+</script>
+
+<style scoped lang="less">
+.home-panel {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  .head {
+    padding: 40px 0;
+    display: flex;
+    align-items: flex-end;
+    h3 {
+      flex: 1;
+      font-size: 32px;
+      font-weight: normal;
+      margin-left: 6px;
+      height: 35px;
+      line-height: 35px;
+      small {
+        font-size: 16px;
+        color: #999;
+        margin-left: 20px;
+      }
+    }
+  }
+}
+</style>

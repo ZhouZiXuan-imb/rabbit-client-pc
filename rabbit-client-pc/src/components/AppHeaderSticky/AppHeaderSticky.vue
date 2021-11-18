@@ -15,7 +15,7 @@
 import {defineComponent} from "vue";
 import AppHeaderNav from "@/components/AppHeaderNav/AppHeaderNav.vue";
 // 引入吸顶功能文件
-import {useScrollTop} from "@/components/AppHeaderSticky/hooks/useScrollTop.ts";
+import {useScrollTop} from "@/hook/useScrollTop/useScrollTop.ts";
 
 export default defineComponent({
   name: "AppHeaderSticky",
