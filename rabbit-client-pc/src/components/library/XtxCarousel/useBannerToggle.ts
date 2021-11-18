@@ -12,7 +12,7 @@ export function useBannerToggle(options: { carousels: ComputedRefValue<any>, aut
     // 给左右按钮添加点击事件
     function toggle(indexNum: number) {  // 如果indexNum是-1  就相当于2 + -1 = 1
         // 声明变量接收轮播图最大索引，轮播图最大索引=轮播图数据数组的length - 1
-        const carouselsLength = carouselsList.value.length - 1;
+        const carouselsLength = carouselsList.value?.length - 1;
         // 每次点击修改activeIndex的值
         activeIndex.value += indexNum
         if (activeIndex.value < 0) {  // 判断如果轮播图播放索引小于0 就给他赋值为轮播图数据数组最大索引
@@ -32,8 +32,9 @@ export function useBannerToggle(options: { carousels: ComputedRefValue<any>, aut
 
     // 轮播图自动播放开启
     function startAutoPlay() {
+        console.log(111)
         // 判断是否开启自动轮播，并且轮播图数据数组长度大于1(两天图片及以上才可以轮播)
-        if (autoPlay && carouselsList.value.length > 1) {
+        if (autoPlay && carouselsList.value?.length > 1) {
             // 开启定时器
             timer = setInterval(() => {
                 // 调用切换轮播图方法

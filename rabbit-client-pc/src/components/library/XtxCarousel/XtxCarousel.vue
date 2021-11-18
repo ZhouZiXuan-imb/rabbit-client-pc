@@ -48,6 +48,8 @@ export default defineComponent({
 
     const {activeIndex, onClickIndicator, toggle, startAutoPlay, stopAutoPlay} = useBannerToggle({carousels: carouselsList, autoPlay:props.autoPlay, duration: props.duration});
 
+
+
     return {
       activeIndex,
       onClickIndicator,

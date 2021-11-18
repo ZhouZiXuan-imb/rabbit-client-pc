@@ -1,5 +1,5 @@
 <template>
-  <div class="home-banner">
+  <div class="category-banner">
     <XtxCarousel :autoPlay="true" :carousels="carousels" :duration="3000"/>
   </div>
 </template>
@@ -9,7 +9,7 @@ import {defineComponent, ref} from "vue";
 import {useGetBannerList} from "@/hook/useGetBannerList/useGetBannerList";
 
 export default defineComponent({
-  name: "HomeBanner",
+  name: "CategoryBanner",
   async setup() {
     // 声明bannerList中每个对象中属性的类型
     type bannerListItemType = {
@@ -33,22 +33,22 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-.home-banner {
+.category-banner {
   width: 1240px;
   height: 500px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 98;
+  //position: absolute;
+  //left: 0;
+  //top: 0;
+  //z-index: 98;
 
   .xtx-carousel {
     // :deep：穿透样式,这样会报错,在vue中使用::v-deep和:deep是等价的
     ::v-deep(.carousel-btn.prev) {
-      left: 270px;
+      //left: 270px;
     }
 
     ::v-deep(.carousel-indicator) {
-      padding-left: 250px;
+      //padding-left: 250px;
     }
   }
 }

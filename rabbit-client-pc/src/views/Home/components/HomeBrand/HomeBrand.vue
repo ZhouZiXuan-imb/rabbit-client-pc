@@ -52,7 +52,7 @@ export default defineComponent({
 
     function toggle(indexNum: number) {
       // 最大页码 = 所有数据 / 每页数据条数，向下取整; 因为length是从1开始的,我们要的是下标,所以这里-1
-      pageNum.value = Math.ceil(dataList.value!.length / 5) - 1
+      pageNum.value = Math.floor(dataList.value!.length / 5)
       // 每次点击让currentIndex + indexNum
       currentIndex.value += indexNum;
       if (currentIndex.value < 0) {
