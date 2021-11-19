@@ -1,4 +1,4 @@
-import {getBannerList} from "@/api/api";
+import {getBannerList} from "@/api/homeApi";
 
 export async function useGetBannerList(distributionSite: number) {
 

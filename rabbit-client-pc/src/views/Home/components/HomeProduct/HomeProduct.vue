@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {getHomeGoodsList} from "@/api/api";
+import {getHomeGoodsList} from "@/api/homeApi";
 import {useObserver} from "@/hook/useObserver/useObserver.ts";
 
 import HomeGoods from "@/views/Home/components/HomeGoods/HomeGoods.vue";

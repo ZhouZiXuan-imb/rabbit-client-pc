@@ -31,7 +31,7 @@
 <script lang="ts">
 import {defineComponent, ref} from "vue";
 import {useObserver} from "@/hook/useObserver/useObserver";
-import {getHotBrandsList} from "@/api/api.ts";
+import {getHotBrandsList} from "@/api/homeApi.ts";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
 

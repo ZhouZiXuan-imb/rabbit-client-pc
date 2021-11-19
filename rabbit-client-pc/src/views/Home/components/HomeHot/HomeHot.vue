@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import {getHotRecommend} from "@/api/api.ts";
+import {getHotRecommend} from "@/api/homeApi.ts";
 import {defineComponent} from "vue";
 import {useObserver} from "@/hook/useObserver/useObserver.ts";
 

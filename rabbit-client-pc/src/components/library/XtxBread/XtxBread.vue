@@ -5,7 +5,6 @@ export default defineComponent({
   name: "XtxBread",
   render() {
     const items = this.$slots.default!();
-    console.log(items)
     let children: VNode[] = [];
 
     items.forEach((item, index) => {

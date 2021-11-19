@@ -32,7 +32,6 @@ export function useBannerToggle(options: { carousels: ComputedRefValue<any>, aut
 
     // 轮播图自动播放开启
     function startAutoPlay() {
-        console.log(111)
         // 判断是否开启自动轮播，并且轮播图数据数组长度大于1(两天图片及以上才可以轮播)
         if (autoPlay && carouselsList.value?.length > 1) {
             // 开启定时器

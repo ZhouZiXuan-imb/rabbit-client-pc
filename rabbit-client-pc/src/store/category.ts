@@ -1,4 +1,4 @@
-import {getCategoryList} from "@/api/api";
+import {getCategoryList} from "@/api/homeApi";
 import {ActionContext} from "vuex";
 import {categoryItemType, stateType} from "@/store/categoryType.ts";
 import {categoryList} from "@/api/homeCategoryList.ts"

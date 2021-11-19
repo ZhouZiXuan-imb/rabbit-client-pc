@@ -7,7 +7,7 @@
         <Transition name="fade-right" mode="out-in">
           <XtxBreadItem :key="category.SubCategory?.name">{{ category.SubCategory?.name }}</XtxBreadItem>
         </Transition>
-      </XtxBread>q
+      </XtxBread>
     </div>
   </AppLayout>
 </template>

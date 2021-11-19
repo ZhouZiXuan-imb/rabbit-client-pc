@@ -36,7 +36,7 @@ import {defineComponent} from "vue";
 import {useObserver} from "@/hook/useObserver/useObserver";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
-import {getSpecialList} from "@/api/api";
+import {getSpecialList} from "@/api/homeApi";
 
 export default defineComponent({
   name: "HomeSpecial",

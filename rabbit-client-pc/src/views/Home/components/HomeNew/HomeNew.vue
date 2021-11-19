@@ -31,7 +31,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {useObserver} from "@/hook/useObserver/useObserver";
-import {getNewGoodsList} from "@/api/api";
+import {getNewGoodsList} from "@/api/homeApi";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
 import HomeSkeleton from "@/views/Home/components/HomeSkeleton/HomeSkeleton.vue"

@@ -48,7 +48,7 @@
 <script lang="ts">
 import {computed, defineComponent, ref} from "vue";
 import {useStore} from "vuex";
-import {getHotBrandsList} from "@/api/api.ts"
+import {getHotBrandsList} from "@/api/homeApi.ts"
 
 // 引入item的类型
 import {categoryItemType} from "@/store/categoryType.ts";
