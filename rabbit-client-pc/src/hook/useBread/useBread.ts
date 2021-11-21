@@ -1,7 +1,7 @@
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import {computed} from "vue";
-import {categoryItemType} from "@/store/categoryType.ts";
+import {categoryItemType} from "@/type/categoryType.ts";
 
 export default function useBread() {
 

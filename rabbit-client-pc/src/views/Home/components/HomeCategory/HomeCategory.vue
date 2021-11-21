@@ -51,7 +51,7 @@ import {useStore} from "vuex";
 import {getHotBrandsList} from "@/api/homeApi.ts"
 
 // 引入item的类型
-import {categoryItemType} from "@/store/categoryType.ts";
+import {categoryItemType} from "@/type/categoryType.ts";
 
 export default defineComponent({
   name: "HomeCategory",

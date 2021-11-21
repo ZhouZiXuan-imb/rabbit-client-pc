@@ -1,7 +1,6 @@
 import {ref} from "vue";
-import {categoryItemType} from "@/store/categoryType.ts";
+import {categoryItemType} from "@/type/categoryType.ts";
 import {getTopCategorySubGoods} from "@/api/categoryApi";
-import {useRouter} from "vue-router";
 
 
 export function useGetSubGoods() {

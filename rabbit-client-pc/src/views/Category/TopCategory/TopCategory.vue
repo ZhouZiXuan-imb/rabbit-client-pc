@@ -2,7 +2,12 @@
   <AppLayout>
     <div class="container">
       <!--   面包屑导航   -->
-      <CategoryBreadcrumb></CategoryBreadcrumb>
+      <XtxBread>
+        <XtxBreadItem path="/">首页</XtxBreadItem>
+        <Transition name="fade-right" mode="out-in">
+          <XtxBreadItem>{{ category.TopCategory?.name }}</XtxBreadItem>
+        </Transition>
+      </XtxBread>
 
       <!--    轮播图   -->
       <Suspense>
@@ -23,7 +28,6 @@ import useBread from "@/hook/useBread/useBread";
 
 import AppLayout from "@/components/AppLayout/AppLayout.vue";
 import CateGoryBanner from "@/views/Category/TopCategory/components/CategoryBanner/CategoryBanner.vue"
-import CategoryBreadcrumb from "@/views/Category/TopCategory/components/CategoryBreadcrumb/CategoryBreadcrumb.vue"
 import ShowSubCategoryList from "@/views/Category/TopCategory/components/ShowSubCategoryList/ShowSubCategoryList.vue"
 import RecommendGoods from "@/views/Category/TopCategory/components/RecommendGoods/RecommendGoods.vue"
 
@@ -32,7 +36,6 @@ export default defineComponent({
   components: {
     AppLayout,
     CateGoryBanner,
-    CategoryBreadcrumb,
     ShowSubCategoryList,
     RecommendGoods,
   },
