@@ -4,11 +4,11 @@ import {getTopCategorySubGoods} from "@/api/categoryApi";
 import {useRouter} from "vue-router";
 
 
-export function useGetSubGoods(id: any) {
+export function useGetSubGoods() {
     let subGoods = ref<categoryItemType>();
 
 
-    function getSubGoods(id: string) {
+    function getSubGoods(id: any) {
         getTopCategorySubGoods(id).then(({data: {result}}: { data: { result: categoryItemType } }) => {
             subGoods.value = result;
         })

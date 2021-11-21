@@ -1,4 +1,4 @@
-import {useIntersectionObserver} from "@vueuse/core";
+import {useIntersectionObserver} from "@vueuse/core/index";
 import {ref} from "vue";
 import {HotRecommendType} from "./type"
 
