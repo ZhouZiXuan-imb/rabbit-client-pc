@@ -30,16 +30,17 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {useRouter, onBeforeRouteUpdate} from "vue-router";
+import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getSubCategoryFilter} from "@/api/categoryApi";
 import {SubCategoryFilterItemType} from "@/type/categoryType.ts";
 
 export default defineComponent({
   name: "SubFilter",
-  setup() {
+  emits:['onFilterParamsChanged'],
+  setup( props, {emit}:any) {
     // 使用router获取地址栏二级分类的id
     const router = useRouter();
-    const {getData, filterList, updateSelectedFilters, selectedFilters, filtersLoading} = useSubCategoryFilter();
+    const {getData, filterList, updateSelectedFilters, selectedFilters, filtersLoading} = useSubCategoryFilter(emit);
     // 调用获取数据的方法
     getData(router.currentRoute.value.params.id)
     // 监听路由是否改变，路由改变重新调用获取数据方法，为了解决页面数据不更新问题
@@ -56,7 +57,7 @@ export default defineComponent({
   }
 })
 
-function useSubCategoryFilter() {
+function useSubCategoryFilter(emit:any) {
 
   let filterList = ref<SubCategoryFilterItemType>()
 
@@ -90,17 +91,17 @@ function useSubCategoryFilter() {
   // 用于存储用户选择的筛选条件
   const selectedFilters = {
     brandId: null,
-    attrs: [],
+    attrs: [] as Array<{ groupName: string; propertyName: string; }>,
   };
 
   // 用于更新用户选择的筛选条件
   const updateSelectedFilters = () => {
     // 更新用户选择的品牌id
-    selectedFilters.brandId = filterList.value.selectedBrandId;
+    selectedFilters.brandId = filterList.value?.selectedBrandId;
     // 重置用户选择的筛选条件
     selectedFilters.attrs = [];
     // 更新用户选择的筛选条件
-    filterList.value.saleProperties.forEach((item) => {
+    filterList.value?.saleProperties.forEach((item) => {
       // 如果用户选择了当前筛选类别的筛选条件
       if (item.selectedFilterName && item.selectedFilterName !== "全部") {
         // 收集用户选择的筛选条件类别名称和具体的筛选条件名称
@@ -110,6 +111,7 @@ function useSubCategoryFilter() {
         });
       }
     });
+    emit('onFilterParamsChanged', selectedFilters)
   };
 
   return {

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import GoodsItem from "@/views/Category/TopCategory/components/GoodsItem/GoodsItem.vue";
+import GoodsItem from "@/views/Category/components/GoodsItem/GoodsItem.vue";
 
 import {defineComponent} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";

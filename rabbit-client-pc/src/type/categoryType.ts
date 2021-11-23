@@ -45,14 +45,14 @@ export type stateType = {
 // 二级分类筛选数据type
 export type SubCategoryFilterItemType = {
     brands: Array<{
-        desc: string;
-        id: string;
-        logo: string;
+        desc?: string;
+        id: string | null;
+        logo?: string;
         name: string;
-        nameEn: string;
-        picture: string;
-        place: string;
-        type: any;
+        nameEn?: string;
+        picture?: string;
+        place?: string;
+        type?: any;
     }>;
     categories: Array<{
         id: string;
@@ -68,8 +68,18 @@ export type SubCategoryFilterItemType = {
     saleProperties: Array<{
         id: string;
         name: string;
-        properties: Array<{ id: string; name: string; }>
+        properties: Array<{ id: string | null; name: string; }>
         selectedFilterName: string;
     }>;
     selectedBrandId: any;
+}
+
+// 二级分类获取排序后的商品数据type
+export type SubCategorySortParamsType = {
+    categoryId?: any;
+    sortField?: string;
+    sortMethod?: string;
+    inventory?: boolean;
+    onlyDiscount?: boolean;
+    page?:number;
 }

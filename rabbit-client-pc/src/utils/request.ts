@@ -22,12 +22,12 @@ export type stateType = {
 
 // 不带token的axios实例
 const instanceWidthOutToken = axios.create({
-    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net/"
+    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net"
 })
 
 // 带token的axios实例
 const instanceWidthToken = axios.create({
-    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net/"
+    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net"
 })
 
 // 请求、响应成功时的回调函数
@@ -42,12 +42,12 @@ const onRejected = (response: AxiosResponse) => {
 
 // 带token的请求拦截器
 instanceWidthToken.interceptors.request.use((config: AxiosRequestConfig) => {
-    const token:string = store.state.user.profile.token;
+    const token: string = store.state.user.profile.token;
     if (token) {
         config.headers!.Authorization = `Bearer ${token}`;
     }
     return config;
-},(error) =>{
+}, (error) => {
     return Promise.reject(error);
 })
 // 带token的响应拦截器
@@ -65,7 +65,7 @@ instanceWidthToken.interceptors.response.use((response) => {
             .catch(() => {
                 console.log("跳转失败");
             });
-        await store.dispatch('user/useSetState', {token:""})
+        await store.dispatch('user/useSetState', {token: ""})
     }
     return Promise.reject(error);
 })
@@ -87,7 +87,7 @@ type requestType = {
 };
 
 // 使用reduce方法把methods数组中的元素累加到对象中作为键
-const request = methods.reduce((requestMethods, method) => {
+const requestWidthToken = methods.reduce((requestMethods, method) => {
     // 每次循环都给requestMethods中添加属性
     requestMethods[method] = (url, data) => {
         // ts好像不能自动识别循环中的变量，所以需要每次循环的时候判断
@@ -105,5 +105,24 @@ const request = methods.reduce((requestMethods, method) => {
     return requestMethods;
 }, {} as requestType)
 
-export {request}
+// 使用reduce方法把methods数组中的元素累加到对象中作为键
+const requestWidthOutToken = methods.reduce((requestMethods, method) => {
+    // 每次循环都给requestMethods中添加属性
+    requestMethods[method] = (url, data) => {
+        // ts好像不能自动识别循环中的变量，所以需要每次循环的时候判断
+        switch (method) {
+            case "get":
+                return instanceWidthOutToken[method](url, {params: data})
+            case "post":
+                return instanceWidthOutToken[method](url, data)
+            case "put":
+                return instanceWidthOutToken[method](url, data)
+            case "delete":
+                return instanceWidthOutToken[method](url, {params: data})
+        }
+    }
+    return requestMethods;
+}, {} as requestType)
+
+export {requestWidthToken, requestWidthOutToken}
 

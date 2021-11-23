@@ -7,9 +7,10 @@
 </template>
 <script lang="ts">
 // import {ref, watchEffect} from "vue";
+import {defineComponent} from "vue";
 import {useVModel} from "@vueuse/core";
 
-export default {
+export default defineComponent({
   name: "XtxCheckbox",
   props: {
     modelValue: {
@@ -18,17 +19,15 @@ export default {
     }
   },
   setup(props, {emit}) {
-
-
     // 声明是否选中变量
     // const isChecked = ref<boolean>(false)
     // 切换选中状态方法
     // function toggle () {
     //   isChecked.value = !isChecked.value
     //
-    //   emit('update:modelValue', isChecked);
+    //   emit('aaa', 1);
     // }
-    //
+
     // watchEffect(() => {
     //   isChecked.value = props.modelValue
     // })
@@ -50,7 +49,7 @@ export default {
       isChecked,
     };
   }
-};
+});
 </script>
 <style scoped lang="less">
 .xtx-checkbox {

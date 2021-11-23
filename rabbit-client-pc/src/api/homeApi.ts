@@ -1,4 +1,4 @@
-import {request} from "@/utils/request";
+import {requestWidthOutToken} from "@/utils/request";
 import {AxiosPromise} from "axios";
 
 /**
@@ -6,7 +6,7 @@ import {AxiosPromise} from "axios";
  * @return {Promise}
  */
 export function getCategoryList(): AxiosPromise {
-    return request.get('/home/category/head');
+    return requestWidthOutToken.get('/home/category/head');
 }
 
 /**
@@ -15,7 +15,7 @@ export function getCategoryList(): AxiosPromise {
  * @return {Promise}
  */
 export function getHotBrandsList(limit: number = 6): AxiosPromise {
-    return request.get('/home/brand', {limit});
+    return requestWidthOutToken.get('/home/brand', {limit});
 }
 
 /**
@@ -25,7 +25,7 @@ export function getHotBrandsList(limit: number = 6): AxiosPromise {
  * @return {Promise}
  */
 export function getBannerList(distributionSite: number = 1) {
-    return request.get('/home/banner', {distributionSite})
+    return requestWidthOutToken.get('/home/banner', {distributionSite})
 }
 
 /**
@@ -34,7 +34,7 @@ export function getBannerList(distributionSite: number = 1) {
  * @return {Promise}
  */
 export function getNewGoodsList(limit: number = 4) {
-    return request.get('/home/new', {limit});
+    return requestWidthOutToken.get('/home/new', {limit});
 }
 
 /**
@@ -43,7 +43,7 @@ export function getNewGoodsList(limit: number = 4) {
  * @return {Promise}
  */
 export function getHotRecommend() {
-    return request.get('/home/hot')
+    return requestWidthOutToken.get('/home/hot')
 }
 
 /**
@@ -52,10 +52,10 @@ export function getHotRecommend() {
  * @return {Promise}
  */
 export function getHomeGoodsList() {
-    return request.get('/home/goods');
+    return requestWidthOutToken.get('/home/goods');
 }
 
 
 export function getSpecialList(limit: number = 3) {
-    return request.get('/home/special', {limit});
+    return requestWidthOutToken.get('/home/special', {limit});
 }

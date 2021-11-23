@@ -1,4 +1,5 @@
-import {request} from "@/utils/request";
+import {requestWidthOutToken, requestWidthToken} from "@/utils/request";
+import {SubCategorySortParamsType} from "@/type/categoryType";
 
 /**
  *
@@ -7,7 +8,7 @@ import {request} from "@/utils/request";
  * @return {Promise}
  */
 export function getTopCategorySubGoods(id: string) {
-    return request.get('/category', {id})
+    return requestWidthOutToken.get('/category', {id})
 }
 
 /**
@@ -16,5 +17,9 @@ export function getTopCategorySubGoods(id: string) {
  * @param id  二级分类id
  */
 export function getSubCategoryFilter(id: string) {
-    return request.get('/category/sub/filter', {id});
+    return requestWidthOutToken.get('/category/sub/filter', {id});
+}
+
+export function getSubCategoryGoods(sortParams: SubCategorySortParamsType) {
+    return requestWidthOutToken.post('/category/goods', sortParams);
 }
