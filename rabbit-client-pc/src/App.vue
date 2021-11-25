@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-// 开启ts检查
+// 开启ts类型推断
 import {defineComponent} from "vue"
 
 export default defineComponent({

@@ -26,7 +26,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup() {
+  setup(props, {emit}) {
     // 被监听元素
     const target = ref(null);
     // 执行监听元素的操作
@@ -34,7 +34,7 @@ export default defineComponent({
       // 如果元素进入了可视区
       if (isIntersecting) {
         // 如果没有正在加载并且还有数据可以加载
-        if (!props.loading && !props.finished) {
+        if (!props.isLoading && !props.isFinished) {
           // 通过触发自定义事件告诉父组件, 元素进入可视区了.
           emit("infinite");
         }
