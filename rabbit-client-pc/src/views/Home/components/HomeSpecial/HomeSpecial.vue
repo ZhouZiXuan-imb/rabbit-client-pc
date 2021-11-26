@@ -1,17 +1,13 @@
 <template>
   <HomePanel title="最新专题" ref="target">
     <template v-slot:right>
-      <XtxMore/>
+      <XtxMore />
     </template>
     <template v-slot:default>
       <div class="special-list">
         <div class="special-item" v-for="item in specialList" :key="item">
           <RouterLink to="/">
-            <img
-                src=""
-                v-lazy="item.cover"
-                alt
-            />
+            <img src="" v-lazy="item.cover" alt />
             <div class="meta">
               <p class="title">
                 <span class="top ellipsis">{{ item.title }}</span>
@@ -21,9 +17,15 @@
             </div>
           </RouterLink>
           <div class="foot">
-            <span class="like"><i class="iconfont icon-hart1"></i>{{ item.collectNum }}</span>
-            <span class="view"><i class="iconfont icon-see"></i>{{ item.viewNum }}</span>
-            <span class="reply"><i class="iconfont icon-message"></i>{{ item.replayNum }}</span>
+            <span class="like"
+              ><i class="iconfont icon-hart1"></i>{{ item.collectNum }}</span
+            >
+            <span class="view"
+              ><i class="iconfont icon-see"></i>{{ item.viewNum }}</span
+            >
+            <span class="reply"
+              ><i class="iconfont icon-message"></i>{{ item.replayNum }}</span
+            >
           </div>
         </div>
       </div>
@@ -32,22 +34,23 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {useObserver} from "@/hook/useObserver/useObserver";
+import { defineComponent } from "vue";
+import { useObserver } from "@/hook/useObserver/useObserver";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
-import {getSpecialList} from "@/api/homeApi";
+import { getSpecialList } from "@/api/homeAPI";
 
 export default defineComponent({
   name: "HomeSpecial",
-  components: {HomePanel},
+  components: { HomePanel },
   setup() {
-    const {target, dataList: specialList} = useObserver(getSpecialList);
+    const { target, dataList: specialList } = useObserver(getSpecialList);
 
     return {
-      target, specialList
-    }
-  }
+      target,
+      specialList,
+    };
+  },
 });
 </script>
 
@@ -80,9 +83,11 @@ export default defineComponent({
       }
 
       .meta {
-        background-image: linear-gradient(to top,
-        rgba(0, 0, 0, 0.8),
-        transparent 50%);
+        background-image: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.8),
+          transparent 50%
+        );
         position: absolute;
         left: 0;
         top: 0;

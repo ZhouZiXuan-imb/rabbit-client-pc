@@ -4,62 +4,83 @@
     <div class="item">
       <div class="head">品牌：</div>
       <div class="body">
-        <a href="javascript:" v-for="item in filterList?.brands" :key="item.id"
-           :class="{active: filterList?.selectedBrandId === item.id}"
-           @click="filterList.selectedBrandId = item.id; updateSelectedFilters()">{{ item.name }}</a>
+        <a
+          href="javascript:"
+          v-for="item in filterList?.brands"
+          :key="item.id"
+          :class="{ active: filterList?.selectedBrandId === item.id }"
+          @click="
+            filterList.selectedBrandId = item.id;
+            updateSelectedFilters();
+          "
+          >{{ item.name }}</a
+        >
       </div>
     </div>
     <div class="item" v-for="item in filterList?.saleProperties" :key="item.id">
       <div class="head">{{ item.name }}：</div>
       <div class="body">
-        <a href="javascript:" v-for="properties in item.properties" :key="item.id"
-           :class="{active: item.selectedFilterName === properties.name }"
-           @click="item.selectedFilterName = properties.name; updateSelectedFilters()">{{ properties.name }}</a>
+        <a
+          href="javascript:"
+          v-for="properties in item.properties"
+          :key="item.id"
+          :class="{ active: item.selectedFilterName === properties.name }"
+          @click="
+            item.selectedFilterName = properties.name;
+            updateSelectedFilters();
+          "
+          >{{ properties.name }}</a
+        >
       </div>
     </div>
   </div>
   <!-- 骨架屏 -->
   <div class="sub-filter" v-else>
-    <XtxSkeleton class="item" width="800px" height="40px"/>
-    <XtxSkeleton class="item" width="800px" height="40px"/>
-    <XtxSkeleton class="item" width="600px" height="40px"/>
-    <XtxSkeleton class="item" width="600px" height="40px"/>
-    <XtxSkeleton class="item" width="600px" height="40px"/>
+    <XtxSkeleton class="item" width="800px" height="40px" />
+    <XtxSkeleton class="item" width="800px" height="40px" />
+    <XtxSkeleton class="item" width="600px" height="40px" />
+    <XtxSkeleton class="item" width="600px" height="40px" />
+    <XtxSkeleton class="item" width="600px" height="40px" />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {onBeforeRouteUpdate, useRouter} from "vue-router";
-import {getSubCategoryFilter} from "@/api/categoryApi";
-import {SubCategoryFilterItemType} from "@/type/categoryType.ts";
+import { defineComponent, ref } from "vue";
+import { onBeforeRouteUpdate, useRouter } from "vue-router";
+import { getSubCategoryFilter } from "@/api/categoryAPI";
+import { SubCategoryFilterItemType } from "@/type/categoryType.ts";
 
 export default defineComponent({
   name: "SubFilter",
-  emits:['onFilterParamsChanged'],
-  setup( props, {emit}:any) {
+  emits: ["onFilterParamsChanged"],
+  setup(props, { emit }: any) {
     // 使用router获取地址栏二级分类的id
     const router = useRouter();
-    const {getData, filterList, updateSelectedFilters, selectedFilters, filtersLoading} = useSubCategoryFilter(emit);
+    const {
+      getData,
+      filterList,
+      updateSelectedFilters,
+      selectedFilters,
+      filtersLoading,
+    } = useSubCategoryFilter(emit);
     // 调用获取数据的方法
-    getData(router.currentRoute.value.params.id)
+    getData(router.currentRoute.value.params.id);
     // 监听路由是否改变，路由改变重新调用获取数据方法，为了解决页面数据不更新问题
     onBeforeRouteUpdate((to) => {
-      getData(to.params.id)
-    })
+      getData(to.params.id);
+    });
 
     return {
       filterList,
       updateSelectedFilters,
       selectedFilters,
-      filtersLoading
-    }
-  }
-})
+      filtersLoading,
+    };
+  },
+});
 
-function useSubCategoryFilter(emit:any) {
-
-  let filterList = ref<SubCategoryFilterItemType>()
+function useSubCategoryFilter(emit: any) {
+  let filterList = ref<SubCategoryFilterItemType>();
 
   // 用于存储筛选数据的加载状态
   const filtersLoading = ref(false);
@@ -69,29 +90,35 @@ function useSubCategoryFilter(emit:any) {
     filtersLoading.value = true;
 
     // 调用获取二级分类筛选条件的api接口函数
-    getSubCategoryFilter(id).then(({data: {result}}: { data: { result: SubCategoryFilterItemType } }) => {
-      // 给品牌前面加上全部
-      result.brands.unshift({id: null, name: "全部"});
-      result.saleProperties.forEach(item => {
-        // 给其他前面加上全部
-        item.properties.unshift({id: null, name: "全部"})
-        // 用于存储用户选择的筛选条件
-        item.selectedFilterName = "全部";
-      })
-      // 用于存储用户选择的品牌id
-      result.selectedBrandId = null;
+    getSubCategoryFilter(id).then(
+      ({
+        data: { result },
+      }: {
+        data: { result: SubCategoryFilterItemType };
+      }) => {
+        // 给品牌前面加上全部
+        result.brands.unshift({ id: null, name: "全部" });
+        result.saleProperties.forEach((item) => {
+          // 给其他前面加上全部
+          item.properties.unshift({ id: null, name: "全部" });
+          // 用于存储用户选择的筛选条件
+          item.selectedFilterName = "全部";
+        });
+        // 用于存储用户选择的品牌id
+        result.selectedBrandId = null;
 
-      filterList.value = result;
+        filterList.value = result;
 
-      // 当获取数据获取完成关闭加载状态
-      filtersLoading.value = false;
-    })
+        // 当获取数据获取完成关闭加载状态
+        filtersLoading.value = false;
+      }
+    );
   }
 
   // 用于存储用户选择的筛选条件
   const selectedFilters = {
     brandId: null,
-    attrs: [] as Array<{ groupName: string; propertyName: string; }>,
+    attrs: [] as Array<{ groupName: string; propertyName: string }>,
   };
 
   // 用于更新用户选择的筛选条件
@@ -111,7 +138,7 @@ function useSubCategoryFilter(emit:any) {
         });
       }
     });
-    emit('onFilterParamsChanged', selectedFilters)
+    emit("onFilterParamsChanged", selectedFilters);
   };
 
   return {
@@ -120,7 +147,7 @@ function useSubCategoryFilter(emit:any) {
     updateSelectedFilters,
     selectedFilters,
     filtersLoading,
-  }
+  };
 }
 </script>
 
@@ -160,5 +187,4 @@ function useSubCategoryFilter(emit:any) {
     padding: 10px 0;
   }
 }
-
 </style>

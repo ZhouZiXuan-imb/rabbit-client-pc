@@ -27,9 +27,9 @@ import {defineComponent} from "vue";
 import useBread from "@/hook/useBread/useBread";
 
 import AppLayout from "@/components/AppLayout/AppLayout.vue";
-import CateGoryBanner from "@/views/Category/TopCategory/components/CategoryBanner/CategoryBanner.vue"
-import ShowSubCategoryList from "@/views/Category/TopCategory/components/ShowSubCategoryList/ShowSubCategoryList.vue"
-import RecommendGoods from "@/views/Category/TopCategory/components/RecommendGoods/RecommendGoods.vue"
+import CateGoryBanner from "@/views/Category/components/CategoryBanner/CategoryBanner.vue"
+import ShowSubCategoryList from "@/views/Category/components/ShowSubCategoryList/ShowSubCategoryList.vue"
+import RecommendGoods from "@/views/Category/components/RecommendGoods/RecommendGoods.vue"
 
 export default defineComponent({
   name: "TopCategory",

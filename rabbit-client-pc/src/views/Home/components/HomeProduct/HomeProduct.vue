@@ -3,18 +3,16 @@
     <HomePanel :title="item.name" v-for="item in homeGoodsList" :key="item">
       <template v-slot:right>
         <div class="sub">
-          <RouterLink to="/" v-for="children in item.children" :key="item.id">{{ children.name }}</RouterLink>
+          <RouterLink to="/" v-for="children in item.children" :key="item.id">{{
+            children.name
+          }}</RouterLink>
         </div>
-        <XtxMore/>
+        <XtxMore />
       </template>
       <template v-slot:default>
         <div class="box">
           <RouterLink class="cover" to="/">
-            <img
-                src=""
-                v-lazy="item.picture"
-                alt=""
-            />
+            <img src="" v-lazy="item.picture" alt="" />
             <strong class="label">
               <span>{{ item.name }}馆</span>
               <span>{{ item.saleInfo }}</span>
@@ -22,7 +20,7 @@
           </RouterLink>
           <ul class="goods-list">
             <li v-for="goods in item.goods" :key="goods.id">
-              <HomeGoods :item="goods"/>
+              <HomeGoods :item="goods" />
             </li>
           </ul>
         </div>
@@ -32,25 +30,24 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {getHomeGoodsList} from "@/api/homeApi";
-import {useObserver} from "@/hook/useObserver/useObserver.ts";
+import { defineComponent } from "vue";
+import { getHomeGoodsList } from "@/api/homeAPI";
+import { useObserver } from "@/hook/useObserver/useObserver.ts";
 
 import HomeGoods from "@/views/Home/components/HomeGoods/HomeGoods.vue";
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
 // import XtxMore from "@/components/library/XtxMore.vue";
 export default defineComponent({
   name: "HomeProduct",
-  components: {HomePanel, HomeGoods},
+  components: { HomePanel, HomeGoods },
   setup() {
-
-    const {target, dataList} = useObserver(getHomeGoodsList)
+    const { target, dataList } = useObserver(getHomeGoodsList);
 
     return {
       target,
       homeGoodsList: dataList,
-    }
-  }
+    };
+  },
 });
 </script>
 

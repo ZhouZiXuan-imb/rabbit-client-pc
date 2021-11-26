@@ -1,21 +1,20 @@
-import {ref} from "vue";
-import {categoryItemType} from "@/type/categoryType.ts";
-import {getTopCategorySubGoods} from "@/api/categoryApi";
-
+import { ref } from "vue";
+import { categoryItemType } from "@/type/categoryType.ts";
+import { getTopCategorySubGoods } from "@/api/categoryAPI";
 
 export function useGetSubGoods() {
-    let subGoods = ref<categoryItemType>();
+  let subGoods = ref<categoryItemType>();
 
+  function getSubGoods(id: any) {
+    getTopCategorySubGoods(id).then(
+      ({ data: { result } }: { data: { result: categoryItemType } }) => {
+        subGoods.value = result;
+      }
+    );
+  }
 
-    function getSubGoods(id: any) {
-        getTopCategorySubGoods(id).then(({data: {result}}: { data: { result: categoryItemType } }) => {
-            subGoods.value = result;
-        })
-    }
-
-    return {
-        subGoods,
-        getSubGoods
-    }
+  return {
+    subGoods,
+    getSubGoods,
+  };
 }
-

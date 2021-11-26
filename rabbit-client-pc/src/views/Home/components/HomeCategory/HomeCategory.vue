@@ -1,25 +1,45 @@
 <template>
   <div class="home-category" @mouseleave="current = null">
     <ul class="menu">
-      <li v-for="item in list" :key="item" @mouseenter="current = item"
-          :class="{active: current?.id && current?.id === item.id}">
+      <li
+        v-for="item in list"
+        :key="item"
+        @mouseenter="current = item"
+        :class="{ active: current?.id && current?.id === item.id }"
+      >
         <RouterLink to="/">{{ item.name }}</RouterLink>
         <template v-if="item.children?.length">
-          <RouterLink to="/" v-for="children in item.children">{{ children.name }}</RouterLink>
+          <RouterLink to="/" v-for="children in item.children">{{
+            children.name
+          }}</RouterLink>
         </template>
-        <template  v-else>
-          <XtxSkeleton bg="rgba(0,0,0,0.2)" width="60px" height="18px" animated="fade" style="margin-right: 5px"></XtxSkeleton>
-          <XtxSkeleton bg="rgba(0,0,0,0.2)" width="60px" height="18px" animated="fade" ></XtxSkeleton>
+        <template v-else>
+          <XtxSkeleton
+            bg="rgba(0,0,0,0.2)"
+            width="60px"
+            height="18px"
+            animated="fade"
+            style="margin-right: 5px"
+          ></XtxSkeleton>
+          <XtxSkeleton
+            bg="rgba(0,0,0,0.2)"
+            width="60px"
+            height="18px"
+            animated="fade"
+          ></XtxSkeleton>
         </template>
       </li>
     </ul>
 
     <div class="layer" v-if="current?.id">
-      <h4>{{ current?.goods ? "商品" : "品牌" }}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+      <h4>
+        {{ current?.goods ? "商品" : "品牌" }}推荐
+        <small>根据您的购买或浏览记录推荐</small>
+      </h4>
       <ul v-if="current?.goods">
         <li v-for="item in current?.goods" :key="item.id">
           <RouterLink to="/">
-            <img :src="item.picture" alt=""/>
+            <img :src="item.picture" alt="" />
             <div class="info">
               <p class="name ellipsis-2">{{ item.name }}</p>
               <p class="desc ellipsis">{{ item.desc }}</p>
@@ -31,9 +51,11 @@
       <ul v-if="current?.brands">
         <li class="brand" v-for="item in current?.brands" :key="item.id">
           <RouterLink to="/">
-            <img :src="item.picture" alt="">
+            <img :src="item.picture" alt="" />
             <div class="info">
-              <p class="place"><i class="iconfont icon-dingwei"></i>{{ item.place }}</p>
+              <p class="place">
+                <i class="iconfont icon-dingwei"></i>{{ item.place }}
+              </p>
               <p class="name ellipsis">{{ item.name }}</p>
               <p class="desc ellipsis-2">{{ item.desc }}</p>
             </div>
@@ -41,17 +63,16 @@
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref} from "vue";
-import {useStore} from "vuex";
-import {getHotBrandsList} from "@/api/homeApi.ts"
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
+import { getHotBrandsList } from "@/api/homeAPI.ts";
 
 // 引入item的类型
-import {categoryItemType} from "@/type/categoryType.ts";
+import { categoryItemType } from "@/type/categoryType.ts";
 
 export default defineComponent({
   name: "HomeCategory",
@@ -65,30 +86,32 @@ export default defineComponent({
     const brand = ref({
       id: "brand",
       name: "品牌",
-      children: [{name: "推荐品牌", id: "child-brand"}],
-      brands: []
+      children: [{ name: "推荐品牌", id: "child-brand" }],
+      brands: [],
     });
     // 修改store中categoryList的children属性的数据
     const list = computed(() => {
       // 遍历categoryList，并返回一个修改后的新的数组
-      const result = store.state.category.categoryList.map((item: categoryItemType) => ({
-        ...item,
-        children: item.children ? item.children.slice(0, 2) : null
-      }))
+      const result = store.state.category.categoryList.map(
+        (item: categoryItemType) => ({
+          ...item,
+          children: item.children ? item.children.slice(0, 2) : null,
+        })
+      );
       // 把推荐品牌push到categoryList的children属性的数据中
-      result.push(brand.value)
-      return result
+      result.push(brand.value);
+      return result;
     });
     // 获取推荐品牌数据
-    getHotBrandsList(6).then(({data}) => {
+    getHotBrandsList(6).then(({ data }) => {
       brand.value.brands = data.result;
-    })
+    });
     return {
       list,
-      current
-    }
-  }
-})
+      current,
+    };
+  },
+});
 </script>
 
 <style scoped lang="less">
@@ -106,7 +129,8 @@ export default defineComponent({
       line-height: 50px;
       text-align: left;
 
-      &:hover, &.active {
+      &:hover,
+      &.active {
         background-color: @xtxColor;
       }
 
@@ -231,6 +255,5 @@ export default defineComponent({
       display: block;
     }
   }
-
 }
 </style>

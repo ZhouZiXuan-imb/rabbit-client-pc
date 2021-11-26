@@ -11,30 +11,25 @@
         <ul class="goods-list" v-if="newGoodsList">
           <li v-for="item in newGoodsList" :key="item.id">
             <RouterLink to="/">
-              <img
-                  src=""
-                  v-lazy="item.picture"
-                  alt=""
-              />
+              <img src="" v-lazy="item.picture" alt="" />
               <p class="name ellipsis">{{ item.name }}</p>
               <p class="price">&yen;{{ item.price }}</p>
             </RouterLink>
           </li>
         </ul>
-        <HomeSkeleton bg="#f0f9f4" v-else/>
+        <HomeSkeleton bg="#f0f9f4" v-else />
       </Transition>
     </template>
   </HomePanel>
-
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {useObserver} from "@/hook/useObserver/useObserver";
-import {getNewGoodsList} from "@/api/homeApi";
+import { defineComponent } from "vue";
+import { useObserver } from "@/hook/useObserver/useObserver";
+import { getNewGoodsList } from "@/api/homeAPI";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
-import HomeSkeleton from "@/views/Home/components/HomeSkeleton/HomeSkeleton.vue"
+import HomeSkeleton from "@/views/Home/components/HomeSkeleton/HomeSkeleton.vue";
 
 export default defineComponent({
   name: "HomeNew",
@@ -43,18 +38,16 @@ export default defineComponent({
     HomeSkeleton,
   },
   setup() {
-
     // const newGoodsList = ref([])
 
-    const {target, dataList} = useObserver(getNewGoodsList)
+    const { target, dataList } = useObserver(getNewGoodsList);
 
     return {
       target,
       newGoodsList: dataList,
-
-    }
-  }
-})
+    };
+  },
+});
 </script>
 
 <style scoped lang="less">

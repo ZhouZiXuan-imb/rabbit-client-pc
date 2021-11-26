@@ -1,26 +1,43 @@
 <template>
   <HomePanel title="热门品牌" subTitle="国际经典 品质保证" ref="target">
     <template v-slot:right>
-      <a href="javascript:" class="iconfont icon-angle-left prev" @click="toggle(-1)" :class="{disabled:currentIndex === 0}"></a>
-      <a href="javascript:" class="iconfont icon-angle-right next" @click="toggle(1)" :class="{disabled:currentIndex === pageNum}"></a>
+      <a
+        href="javascript:"
+        class="iconfont icon-angle-left prev"
+        @click="toggle(-1)"
+        :class="{ disabled: currentIndex === 0 }"
+      ></a>
+      <a
+        href="javascript:"
+        class="iconfont icon-angle-right next"
+        @click="toggle(1)"
+        :class="{ disabled: currentIndex === pageNum }"
+      ></a>
     </template>
     <template v-slot:default>
       <div class="box">
         <Transition name="fade">
-          <ul class="list" v-if="hotBrandsList" :style="{transform:`translateX(${-currentIndex * 1240}px)`}">
+          <ul
+            class="list"
+            v-if="hotBrandsList"
+            :style="{ transform: `translateX(${-currentIndex * 1240}px)` }"
+          >
             <li v-for="item in hotBrandsList" :key="item">
               <RouterLink to="/">
-                <img
-                    src=""
-                    v-lazy="item.picture"
-                    alt=""
-                />
+                <img src="" v-lazy="item.picture" alt="" />
               </RouterLink>
             </li>
           </ul>
           <div v-else class="skeleton">
-            <xtx-skeleton class="item" v-for="item in 5" :key="item" animated="scroll" bg="#e4e4e4" width="240px"
-                          height="305px"/>
+            <xtx-skeleton
+              class="item"
+              v-for="item in 5"
+              :key="item"
+              animated="scroll"
+              bg="#e4e4e4"
+              width="240px"
+              height="305px"
+            />
           </div>
         </Transition>
       </div>
@@ -29,9 +46,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {useObserver} from "@/hook/useObserver/useObserver";
-import {getHotBrandsList} from "@/api/homeApi.ts";
+import { defineComponent, ref } from "vue";
+import { useObserver } from "@/hook/useObserver/useObserver";
+import { getHotBrandsList } from "@/api/homeAPI.ts";
 
 import HomePanel from "@/views/Home/components/HomePanel/HomePanel.vue";
 
@@ -41,8 +58,7 @@ export default defineComponent({
     HomePanel,
   },
   setup() {
-
-    const {target, dataList} = useObserver(getHotBrandsList)
+    const { target, dataList } = useObserver(getHotBrandsList);
 
     // 当前页的索引
     let currentIndex = ref<number>(0);
@@ -52,7 +68,7 @@ export default defineComponent({
 
     function toggle(indexNum: number) {
       // 最大页码 = 所有数据 / 每页数据条数，向下取整; 因为length是从1开始的,我们要的是下标,所以这里-1
-      pageNum.value = Math.floor(dataList.value!.length / 5)
+      pageNum.value = Math.floor(dataList.value!.length / 5);
       // 每次点击让currentIndex + indexNum
       currentIndex.value += indexNum;
       if (currentIndex.value < 0) {
@@ -69,10 +85,9 @@ export default defineComponent({
       hotBrandsList: dataList,
       toggle,
       currentIndex,
-      pageNum
-    }
-
-  }
+      pageNum,
+    };
+  },
 });
 </script>
 

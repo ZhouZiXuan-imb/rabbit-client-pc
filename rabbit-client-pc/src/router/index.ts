@@ -3,8 +3,9 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router'
 const HomePage = () => import('@/views/Home/Home.vue');
 // 使用懒加载方式引入Category页组件
 const TopCategoryPage = () => import('@/views/Category/TopCategory/TopCategory.vue')
-// 使用懒加载方式引入Category页组件
+// 使用懒加载方式引入SubCategory页组件
 const SubCategoryPage = () => import('@/views/Category/SubCagetory/SubCategory.vue')
+const GoodsDetailPage = () => import("@/views/goods/GoodsDetailPage/GoodsDetailPage.vue")
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -21,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/category/sub/:id',
         name: 'SubCategoryPage',
         component: SubCategoryPage,
+    },
+    {
+        path: '/goods/detail/:id',
+        name: 'GoodsDetailPage',
+        component: GoodsDetailPage,
     }
 ]
 
