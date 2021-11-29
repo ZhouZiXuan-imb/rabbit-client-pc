@@ -5,7 +5,7 @@
           :src="images[currentIndex]"
           alt=""
       />
-      <div class="layer" :style="{left: layerPosition.left + 'px', top:layerPosition.top + 'px'}"></div>
+      <div class="layer" :style="{left: layerPosition.left + 'px', top:layerPosition.top + 'px'}" v-show="isShowMask"></div>
     </div>
     <ul class="small">
       <li :class="{active: currentIndex === index}" v-for="(item,index) in images" @click="changeCurrentIndex(index)">
@@ -19,7 +19,7 @@
     <!--  放大镜  -->
     <div class="large"
          :style="{backgroundImage: `url(${images[currentIndex]})`, backgroundPositionX: -bgPosition.left+'px',
-         backgroundPositionY: -bgPosition.top+'px'}"></div>
+         backgroundPositionY: -bgPosition.top+'px'}" v-show="isShowImg"></div>
   </div>
 </template>
 <script lang="ts">
@@ -38,8 +38,13 @@ export default defineComponent({
     // 当前大图要显示的图片的索引
     const currentIndex = ref<number>(0);
 
+    // 鼠标移入显示图片遮罩层
+    const isShowMask = ref<boolean>(false);
+    // 鼠标移入显示放大镜图片
+    const isShowImg = ref<boolean>(false);
+
     // 修改当前显示图片的索引
-    function changeCurrentIndex(index) {
+    function changeCurrentIndex(index:number) {
       currentIndex.value = index;
     }
 
@@ -56,26 +61,37 @@ export default defineComponent({
     watch([isOutside, elementX, elementY], () => {
       // 用户鼠标是否进入元素
       if (!isOutside.value) {
+        // 显示遮罩层
+        isShowMask.value = true;
+        // 显示放大镜图片
+        isShowImg.value = true;
+        // 设置放大镜背景图片位置
         bgPosition.value = {
           left: elementX.value,
           top: elementY.value,
         }
+        // 设置遮罩层位置
         layerPosition.value = {
           left: elementX.value - 100,
           top: elementY.value - 100,
         }
-
+        // 如果遮罩层x轴位置 <0 就让遮罩层x轴的位置 = 0
         if (layerPosition.value.left < 0) {
           layerPosition.value.left = 0;
-        } else if(layerPosition.value.left > 200) {
+        } else if(layerPosition.value.left > 200) { // 遮罩层x轴位置如果 >200 就让遮罩层x轴位置 = 200
           layerPosition.value.left = 200;
         }
-
+        // 如果遮罩层y轴位置 <0 就让遮罩层y轴的位置 = 0
         if (layerPosition.value.top < 0) {
           layerPosition.value.top = 0;
-        } else if(layerPosition.value.top > 200) {
+        } else if(layerPosition.value.top > 200) { // 遮罩层y轴位置如果 >200 就让遮罩层y轴位置 = 200
           layerPosition.value.top = 200;
         }
+      } else {
+        // 隐藏放大镜图片
+        isShowImg.value = false;
+        // 隐藏遮罩层
+        isShowMask.value = false;
       }
     }, {immediate: true})
 
@@ -85,6 +101,8 @@ export default defineComponent({
       changeCurrentIndex,
       layerPosition,
       bgPosition,
+      isShowImg,
+      isShowMask,
     }
   }
 });

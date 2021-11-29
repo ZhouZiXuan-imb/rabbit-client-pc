@@ -4,15 +4,33 @@
       <!--   面包屑导航   -->
       <XtxBread>
         <XtxBreadItem path="/">首页</XtxBreadItem>
-        <XtxBreadItem :path="`/category/${goodsList?.categories[1].id}`">{{goodsList?.categories[1].name}}</XtxBreadItem>
-        <XtxBreadItem :path="`/category/sub/${goodsList?.categories[0].id}`">{{goodsList?.categories[0].name}}</XtxBreadItem>
+        <XtxBreadItem :path="`/category/${goodsList?.categories[1].id}`">{{ goodsList?.categories[1].name }}
+        </XtxBreadItem>
+        <XtxBreadItem :path="`/category/sub/${goodsList?.categories[0].id}`">{{ goodsList?.categories[0].name }}
+        </XtxBreadItem>
         <transition name="fade-right" mode="out-in">
-          <XtxBreadItem :key="goodsList?.id">{{goodsList?.name}}</XtxBreadItem>
+          <XtxBreadItem :key="goodsList?.id">{{ goodsList?.name }}</XtxBreadItem>
         </transition>
       </XtxBread>
 
-      <!--   图片预览组件   -->
-      <GoodsImages :images="goodsList?.mainPictures"></GoodsImages>
+      <!--   商品信息   -->
+      <div class="goods-info">
+        <!-- 左侧 -->
+        <div class="media">
+          <!--   图片预览组件   -->
+          <GoodsImages :images="goodsList?.mainPictures"></GoodsImages>
+          <!--  商品销售信息组件  -->
+          <GoodsSales></GoodsSales>
+        </div>
+        <!-- 右侧 -->
+        <div class="spec">
+          <!--商品基本信息组件-->
+          <GoodsInfo :goods="goodsList"></GoodsInfo>
+          <GoodsSku :specs="goodsList?.specs"/>
+        </div>
+
+      </div>
+
     </div>
   </AppLayout>
 </template>
@@ -22,6 +40,9 @@ import AppLayout from "@/components/AppLayout/AppLayout.vue";
 import XtxBread from "@/components/library/XtxBread/XtxBread.vue";
 import XtxBreadItem from "@/components/library/XtxBreadItem/XtxBreadItem.vue";
 import GoodsImages from "@/views/goods/components/GoodsImages/GoodsImages.vue";
+import GoodsSales from "@/views/goods/components/GoodsSales/GoodsSales.vue";
+import GoodsInfo from "@/views/goods/components/GoodsInfo/GoodsInfo.vue";
+import GoodsSku from "@/views/goods/components/GoodsSku/GoodsSku.vue";
 
 import {defineComponent, ref} from "vue";
 import {onBeforeRouteUpdate, useRoute} from "vue-router";
@@ -35,6 +56,9 @@ export default defineComponent({
     XtxBread,
     XtxBreadItem,
     GoodsImages,
+    GoodsSales,
+    GoodsInfo,
+    GoodsSku,
   },
   setup() {
     const {goodsList} = useGoods();
@@ -50,6 +74,7 @@ function useGoods() {
   const router = useRoute();
   // 存储商品列表的变量
   let goodsList = ref<goodsDetailType>();
+
   // 获取商品数据
   function getGoods(router: string) {
     // 发起请求
@@ -58,6 +83,7 @@ function useGoods() {
       goodsList.value = result;
     });
   }
+
   // 当路由发生改变时重新调用getGoods方法
   onBeforeRouteUpdate((to) => {
     getGoods(to.params.id as string)
@@ -74,4 +100,47 @@ function useGoods() {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.goods-info {
+  min-height: 600px;
+  background: #fff;
+  display: flex;
+
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
+}
+
+.goods-footer {
+  display: flex;
+  margin-top: 20px;
+
+  .goods-article {
+    width: 940px;
+    margin-right: 20px;
+  }
+
+  .goods-aside {
+    width: 280px;
+    min-height: 1000px;
+  }
+}
+
+.goods-tabs {
+  min-height: 600px;
+  background: #fff;
+}
+
+.goods-warn {
+  min-height: 600px;
+  background: #fff;
+  margin-top: 20px;
+}
+</style>
