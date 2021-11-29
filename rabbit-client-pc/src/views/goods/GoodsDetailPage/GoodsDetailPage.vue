@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="container">
+    <div class="container" v-if="goodsList">
       <!--   面包屑导航   -->
       <XtxBread>
         <XtxBreadItem path="/">首页</XtxBreadItem>
@@ -26,7 +26,7 @@
         <div class="spec">
           <!--商品基本信息组件-->
           <GoodsInfo :goods="goodsList"></GoodsInfo>
-          <GoodsSku :specs="goodsList?.specs"/>
+          <GoodsSku :specs="goodsList?.specs" :skus="goodsList?.skus"/>
         </div>
 
       </div>

@@ -2,6 +2,10 @@ import axios, {AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse} from
 // import store from "@/store"
 import router from "@/router";
 import store from '@/store'
+
+// 线上环境: https://apipc-xiaotuxian-front.itheima.net/
+// 开发环境: http://pcapi-xiaotuxian-front-devtest.itheima.net/
+
 // 声明state类型
 export type stateType = {
     profile: {
@@ -22,12 +26,12 @@ export type stateType = {
 
 // 不带token的axios实例
 const instanceWidthOutToken = axios.create({
-    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net"
+    baseURL: "https://apipc-xiaotuxian-front.itheima.net/"
 })
 
 // 带token的axios实例
 const instanceWidthToken = axios.create({
-    baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net"
+    baseURL: "https://apipc-xiaotuxian-front.itheima.net/"
 })
 
 // 请求、响应成功时的回调函数
