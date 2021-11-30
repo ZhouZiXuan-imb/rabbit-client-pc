@@ -4,12 +4,16 @@
       <!--   面包屑导航   -->
       <XtxBread>
         <XtxBreadItem path="/">首页</XtxBreadItem>
-        <XtxBreadItem :path="`/category/${goodsList?.categories[1].id}`">{{ goodsList?.categories[1].name }}
+        <XtxBreadItem :path="`/category/${goodsList?.categories[1].id}`"
+        >{{ goodsList?.categories[1].name }}
         </XtxBreadItem>
-        <XtxBreadItem :path="`/category/sub/${goodsList?.categories[0].id}`">{{ goodsList?.categories[0].name }}
+        <XtxBreadItem :path="`/category/sub/${goodsList?.categories[0].id}`"
+        >{{ goodsList?.categories[0].name }}
         </XtxBreadItem>
         <transition name="fade-right" mode="out-in">
-          <XtxBreadItem :key="goodsList?.id">{{ goodsList?.name }}</XtxBreadItem>
+          <XtxBreadItem :key="goodsList?.id"
+          >{{ goodsList?.name }}
+          </XtxBreadItem>
         </transition>
       </XtxBread>
 
@@ -26,11 +30,12 @@
         <div class="spec">
           <!--商品基本信息组件-->
           <GoodsInfo :goods="goodsList"></GoodsInfo>
-          <GoodsSku :specs="goodsList?.specs" :skus="goodsList?.skus"/>
+          <!--skuId="1369155862131642369"-->
+          <GoodsSku :specs="goodsList?.specs" :skus="goodsList?.skus" @onSpecChanged="onSpecChanged"/>
+
+          <XtxNumberBox :inventory="goodsList?.inventory" label="数量" v-model="goodsNumCount"></XtxNumberBox>
         </div>
-
       </div>
-
     </div>
   </AppLayout>
 </template>
@@ -62,9 +67,17 @@ export default defineComponent({
   },
   setup() {
     const {goodsList} = useGoods();
+    let goodsNumCount = ref<number>(1)
+
+    // 子组件中用户选择了规格调用方法获取到更新后的值
+    function onSpecChanged(skus: any) {
+      // console.log(skus)
+    }
 
     return {
       goodsList,
+      onSpecChanged,
+      goodsNumCount,
     };
   },
 });
@@ -78,21 +91,22 @@ function useGoods() {
   // 获取商品数据
   function getGoods(router: string) {
     // 发起请求
-    getGoodsDetail(router).then(({data: {result}}: { data: { result: goodsDetailType } }) => {
-      // 赋值
-      goodsList.value = result;
-    });
+    getGoodsDetail(router).then(
+        ({data: {result}}: { data: { result: goodsDetailType } }) => {
+          // 赋值
+          goodsList.value = result;
+        }
+    );
   }
 
   // 当路由发生改变时重新调用getGoods方法
   onBeforeRouteUpdate((to) => {
-    getGoods(to.params.id as string)
-  })
+    getGoods(to.params.id as string);
+  });
   // 初始化页面调用getGoods方法
   getGoods(router.params.id as string);
 
   // ======================================
-
 
   return {
     goodsList,
