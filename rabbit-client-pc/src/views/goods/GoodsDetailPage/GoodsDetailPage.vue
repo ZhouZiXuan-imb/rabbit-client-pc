@@ -5,14 +5,14 @@
       <XtxBread>
         <XtxBreadItem path="/">首页</XtxBreadItem>
         <XtxBreadItem :path="`/category/${goodsList?.categories[1].id}`"
-        >{{ goodsList?.categories[1].name }}
+          >{{ goodsList?.categories[1].name }}
         </XtxBreadItem>
         <XtxBreadItem :path="`/category/sub/${goodsList?.categories[0].id}`"
-        >{{ goodsList?.categories[0].name }}
+          >{{ goodsList?.categories[0].name }}
         </XtxBreadItem>
         <transition name="fade-right" mode="out-in">
           <XtxBreadItem :key="goodsList?.id"
-          >{{ goodsList?.name }}
+            >{{ goodsList?.name }}
           </XtxBreadItem>
         </transition>
       </XtxBread>
@@ -31,9 +31,38 @@
           <!--商品基本信息组件-->
           <GoodsInfo :goods="goodsList"></GoodsInfo>
           <!--skuId="1369155862131642369"-->
-          <GoodsSku :specs="goodsList?.specs" :skus="goodsList?.skus" @onSpecChanged="onSpecChanged"/>
+          <GoodsSku
+            :specs="goodsList?.specs"
+            :skus="goodsList?.skus"
+            @onSpecChanged="onSpecChanged"
+          />
 
-          <XtxNumberBox :inventory="goodsList?.inventory" label="数量" v-model="goodsNumCount"></XtxNumberBox>
+          <XtxNumberBox
+            :inventory="goodsList?.inventory"
+            label="数量"
+            v-model="goodsNumCount"
+          ></XtxNumberBox>
+
+          <XtxButton type="primary" style="margin-top: 15px"
+            >加入购物车
+          </XtxButton>
+        </div>
+      </div>
+
+      <!--   同类商品组件   -->
+      <GoodsRelevant :goodsId="goodsList?.id" />
+
+      <div class="goods-footer">
+        <div class="goods-article">
+          <!--   标签页组件   -->
+          <GoodsTab />
+        </div>
+
+        <div class="goods-aside">
+          <!--   热榜组件   -->
+          <GoodsHot :type="1" />
+          <GoodsHot :type="2" />
+          <GoodsHot :type="3" />
         </div>
       </div>
     </div>
@@ -42,37 +71,41 @@
 
 <script lang="ts">
 import AppLayout from "@/components/AppLayout/AppLayout.vue";
-import XtxBread from "@/components/library/XtxBread/XtxBread.vue";
-import XtxBreadItem from "@/components/library/XtxBreadItem/XtxBreadItem.vue";
 import GoodsImages from "@/views/goods/components/GoodsImages/GoodsImages.vue";
 import GoodsSales from "@/views/goods/components/GoodsSales/GoodsSales.vue";
 import GoodsInfo from "@/views/goods/components/GoodsInfo/GoodsInfo.vue";
 import GoodsSku from "@/views/goods/components/GoodsSku/GoodsSku.vue";
+import GoodsRelevant from "@/views/goods/components/GoodsRelevant/GoodsRelevant.vue";
+import GoodsTab from "@/views/goods/components/GoodsTab/GoodsTab.vue";
+import GoodsHot from "@/views/goods/components/GoodsHot/GoodsHot.vue";
 
-import {defineComponent, ref} from "vue";
-import {onBeforeRouteUpdate, useRoute} from "vue-router";
-import {getGoodsDetail} from "@/api/goodsAPI";
-import {goodsDetailType} from "@/type/goodsDetailType";
+import { defineComponent, provide, ref } from "vue";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
+import { getGoodsDetail } from "@/api/goodsAPI";
+import { goodsDetailType } from "@/type/goodsDetailType";
 
 export default defineComponent({
   name: "GoodsDetailPage",
   components: {
     AppLayout,
-    XtxBread,
-    XtxBreadItem,
     GoodsImages,
     GoodsSales,
     GoodsInfo,
     GoodsSku,
+    GoodsRelevant,
+    GoodsTab,
+    GoodsHot,
   },
   setup() {
-    const {goodsList} = useGoods();
-    let goodsNumCount = ref<number>(1)
+    const { goodsList } = useGoods();
+    let goodsNumCount = ref<number>(1);
 
     // 子组件中用户选择了规格调用方法获取到更新后的值
     function onSpecChanged(skus: any) {
       // console.log(skus)
     }
+
+    provide("goodsList", goodsList);
 
     return {
       goodsList,
@@ -92,10 +125,10 @@ function useGoods() {
   function getGoods(router: string) {
     // 发起请求
     getGoodsDetail(router).then(
-        ({data: {result}}: { data: { result: goodsDetailType } }) => {
-          // 赋值
-          goodsList.value = result;
-        }
+      ({ data: { result } }: { data: { result: goodsDetailType } }) => {
+        // 赋值
+        goodsList.value = result;
+      }
     );
   }
 

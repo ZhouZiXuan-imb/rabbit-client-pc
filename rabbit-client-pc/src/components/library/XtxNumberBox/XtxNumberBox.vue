@@ -17,6 +17,7 @@ export default defineComponent({
   props: {
     inventory: {
       type: Number,
+      default: 1
     },
     label: {
       type: String,
@@ -30,10 +31,9 @@ export default defineComponent({
   setup(props, {emit}) {
     // 双向绑定modelValue
     let goodsNumCount = useVModel(props, "modelValue", emit);
-    console.log(props.inventory)
 
     function onChangeNum(number: number) {
-      const nextNumber = goodsNumCount.value += number;
+      const nextNumber = goodsNumCount.value + number;
       console.log(nextNumber)
       if(nextNumber < 1) {
         goodsNumCount.value = 1

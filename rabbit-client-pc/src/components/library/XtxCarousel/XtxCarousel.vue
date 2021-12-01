@@ -2,7 +2,15 @@
   <div class="xtx-carousel" @mouseenter="stopAutoPlay" @mouseleave="startAutoPlay">
     <ul class="carousel-body">
       <li :class="['carousel-item', activeIndex === index?'fade':'']" v-for="(item,index) in carousels">
-        <RouterLink to="/">
+        <!-- 如果 item 是数组就表示当前遍历的同类商品数据 -->
+        <div class="slider" v-if="Array.isArray(item)">
+          <router-link v-for="goods in item" :key="goods.id" :to="`/goods/detail/${goods.id}`">
+            <img :src="goods.picture" alt=""/>
+            <p class="name ellipsis">{{ goods.name }}</p>
+            <p class="price">&yen;{{ goods.price }}</p>
+          </router-link>
+        </div>
+        <RouterLink to="/" v-else>
           <img
               :src="item.imgUrl"
               alt=""
@@ -72,6 +80,32 @@ export default defineComponent({
     &-body {
       width: 100%;
       height: 100%;
+
+      .slider {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 40px;
+        > a {
+          width: 240px;
+          text-align: center;
+          img {
+            padding: 20px;
+            width: 230px !important;
+            height: 230px !important;
+          }
+          .name {
+            font-size: 16px;
+            color: #666;
+            padding: 0 40px;
+          }
+          .price {
+            font-size: 16px;
+            color: @priceColor;
+            margin-top: 15px;
+          }
+        }
+      }
+
     }
 
     &-item {
