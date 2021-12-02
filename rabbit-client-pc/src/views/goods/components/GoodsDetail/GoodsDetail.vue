@@ -19,7 +19,6 @@ import { defineComponent, inject } from "vue";
 export default defineComponent({
   setup() {
     const goodsList = inject("goodsList");
-    console.log(goodsList);
 
     return {
       goodsList,

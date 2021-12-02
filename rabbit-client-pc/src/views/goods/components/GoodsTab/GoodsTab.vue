@@ -2,7 +2,7 @@
   <div class="goods-tabs">
     <nav>
       <a href="javascript:" :class="{active: activeComponentName === 'GoodsDetail'}" @click="activeComponentName = 'GoodsDetail'">商品详情</a>
-      <a href="javascript:" :class="{active: activeComponentName === 'GoodsComment'}" @click="activeComponentName = 'GoodsComment'">商品评价<span>(500+)</span></a>
+      <a href="javascript:" :class="{active: activeComponentName === 'GoodsComment'}" @click="activeComponentName = 'GoodsComment'">商品评价<span>(0)</span></a>
     </nav>
     <!-- 切换内容的地方 -->
     <GoodsDetail v-if="activeComponentName==='GoodsDetail'"></GoodsDetail>

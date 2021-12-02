@@ -59,16 +59,22 @@ function useGetGoods(id: string, limit: number, type: number) {
     3: "总热销榜",
   };
 
+  const router = useRoute();
+
   const goodsHotList = ref<Array<GoodsHotList>>([]);
 
-  getGoodsHot(id, limit, type).then(
-    ({ data: { result } }: { data: { result: Array<GoodsHotList> } }) => {
-      goodsHotList.value = result;
-    }
-  );
+  function getData(id: string, limit: number, type: number) {
+    getGoodsHot(id, limit, type).then(
+      ({ data: { result } }: { data: { result: Array<GoodsHotList> } }) => {
+        goodsHotList.value = result;
+      }
+    );
+  }
+
+  getData(router.params.id as string, 16, type);
 
   onBeforeRouteUpdate((to) => {
-    useGetGoods(to.params.id as string, 16, type);
+    getData(to.params.id as string, 16, type);
   });
 
   return {
