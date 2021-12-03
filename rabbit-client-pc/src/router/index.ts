@@ -6,6 +6,7 @@ const TopCategoryPage = () => import('@/views/Category/TopCategory/TopCategory.v
 // 使用懒加载方式引入SubCategory页组件
 const SubCategoryPage = () => import('@/views/Category/SubCagetory/SubCategory.vue')
 const GoodsDetailPage = () => import("@/views/goods/GoodsDetailPage/GoodsDetailPage.vue")
+const Login = () => import("@/views/Login/Login.vue")
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -27,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/goods/detail/:id',
         name: 'GoodsDetailPage',
         component: GoodsDetailPage,
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login,
     }
 ]
 
