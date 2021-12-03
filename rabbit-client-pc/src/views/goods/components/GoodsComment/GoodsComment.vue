@@ -89,9 +89,7 @@
       </div>
     </div>
 
-    <XtxPagination v-model="reqParams.page" />
-
-    {{currentPage}}
+    <XtxPagination :totalCount="totalCount" :pageSize="reqParams.pageSize" v-model:page="reqParams.page" />
   </div>
 </template>
 
@@ -113,6 +111,9 @@ export default defineComponent({
     // 声明变量存储当前是第几页
     const currentPage = ref(1);
 
+    // 声明变量存储总共有多少条数据
+    const totalCount = ref(100);
+
     const { commentsList, updateReqParams, reqParams } = useGetCommentList();
 
     // 声明当前选中的评价类型
@@ -128,6 +129,7 @@ export default defineComponent({
       reqParams,
       currentPage,
       useGetCommentList,
+      totalCount,
     };
   },
 });
@@ -206,6 +208,7 @@ function useGetCommentList() {
   // 筛选条件类型
   type ReqParamsType = {
     page?: number;
+    pageSize?:number;
     hasPicture?: null | boolean;
     tag?: string;
     sortField?: string;
@@ -230,6 +233,7 @@ function useGetCommentList() {
   // 声明收集用户排序与筛选的对象
   const reqParams = ref<ReqParamsType>({
     page: 1,
+    pageSize: 10,
     hasPicture: null,
     tag: "",
     sortField: "",
@@ -268,6 +272,7 @@ function useGetCommentList() {
     },
     {
       immediate: true,
+      deep:true,
     }
   );
 

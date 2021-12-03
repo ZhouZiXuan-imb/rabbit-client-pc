@@ -56,6 +56,8 @@
         <div class="goods-article">
           <!--   标签页组件   -->
           <GoodsTab />
+
+          <GoodsWarn />
         </div>
 
         <div class="goods-aside">
@@ -64,7 +66,9 @@
           <GoodsHot :type="2" />
           <GoodsHot :type="3" />
         </div>
+
       </div>
+
     </div>
   </AppLayout>
 </template>
@@ -78,6 +82,7 @@ import GoodsSku from "@/views/goods/components/GoodsSku/GoodsSku.vue";
 import GoodsRelevant from "@/views/goods/components/GoodsRelevant/GoodsRelevant.vue";
 import GoodsTab from "@/views/goods/components/GoodsTab/GoodsTab.vue";
 import GoodsHot from "@/views/goods/components/GoodsHot/GoodsHot.vue";
+import GoodsWarn from "@/views/goods/components/GoodsWarn/GoodsWarn.vue";
 
 import { defineComponent, provide, ref } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
@@ -95,6 +100,7 @@ export default defineComponent({
     GoodsRelevant,
     GoodsTab,
     GoodsHot,
+    GoodsWarn,
   },
   setup() {
     const { goodsList } = useGoods();

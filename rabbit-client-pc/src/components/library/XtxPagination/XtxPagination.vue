@@ -1,16 +1,17 @@
 <template>
   <div class="xtx-pagination">
-    <a href="javascript:" @click="currentPage -= 1">上一页</a>
+    <a href="javascript:" @click="currentPage -= 1" v-if="currentPage > 1">上一页</a>
     <span v-if="pageButtonChanged.start > 1">...</span>
     <a
       href="javascript:"
       :class="{ active: currentPage === item }"
+      @click="currentPage = item"
       v-for="item in pageButtonChanged.pageButtonArray"
       >{{ item }}</a
     >
 
     <span v-if="pageButtonChanged.end < pageButtonChanged.totalPage">...</span>
-    <a href="javascript:" @click="currentPage += 1">下一页</a>
+    <a href="javascript:" @click="currentPage += 1" v-if="currentPage < pageButtonChanged.totalPage">下一页</a>
   </div>
 </template>
 <script lang="ts">
@@ -20,20 +21,25 @@ import { useVModel } from "@vueuse/core";
 export default defineComponent({
   name: "XtxPagination",
   props: {
-    modelValue: {
+    page: {
       type: Number,
       default: 1,
     },
+    pageSize: {
+      type: Number,
+      default: 10,
+    },
+    totalCount:{
+      type:Number,
+      default: 100
+    }
   },
   setup(props, { emit }) {
+    const startButtonFlag = ref(true);
+    const endButtonFlag = ref(false);
+
     // 声明变量存储当前是第几页
-    const currentPage = useVModel(props, "modelValue", emit);
-
-    // 声明变量存储总共有多少条数据
-    const totalCount = ref(100);
-
-    // 声明变量存储每页显示多少条数据
-    const pageSize = ref(10);
+    const currentPage = useVModel(props, "page", emit);
 
     // 声明变量存储要显示多少个分页
     const pageButtonNumber = 5;
@@ -45,16 +51,19 @@ export default defineComponent({
       // 开始分页页码
       let start = currentPage.value - pageOffset;
 
-      // 判断如果开始分页页码小于1，就让开始分页等于1
-      if (start < 1) {
-        start = 1;
-      }
-
       // 结束分页页码
       let end = start + pageButtonNumber - 1;
 
       // 计算总页数
-      let totalPage = Math.ceil(totalCount.value / pageSize.value);
+      let totalPage = Math.ceil(props.totalCount / props.pageSize);
+
+      // 判断如果开始分页页码小于1，就让开始分页等于1
+      // 并且重新计算结束页码
+      if (start < 1) {
+        start = 1;
+        let temp = start + pageButtonNumber - 1;
+        end = temp > totalPage ? totalPage : temp;
+      }
 
       // 判断如果结束分页页码到了最大页数，就让结束分页页码等于最大页数
       // 并且重新计算开始页码
@@ -85,13 +94,13 @@ export default defineComponent({
         totalPage,
         start,
         end,
+        startButtonFlag,
+        endButtonFlag,
       };
     });
 
     return {
       currentPage,
-      totalCount,
-      pageSize,
       pageButtonChanged,
     };
   },
