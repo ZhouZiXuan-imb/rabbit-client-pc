@@ -169,7 +169,6 @@ function useGetCommentTitle() {
   getData(router.params.id as string);
   // 当路由更新是重新调用
   onBeforeRouteUpdate((to) => {
-    console.log(to.params.id);
     getData(to.params.id as string);
   });
 
@@ -267,7 +266,6 @@ function useGetCommentList() {
   watch(
     () => reqParams.value,
     () => {
-      console.log(reqParams.value)
       getData(router.params.id as string, reqParams.value);
     },
     {

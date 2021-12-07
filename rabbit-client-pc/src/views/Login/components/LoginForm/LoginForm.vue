@@ -1,50 +1,50 @@
 <template>
   <div class="account-box">
     <div class="toggle">
-      <button v-if="activeName === 'qrcode'">
+      <button v-if="isMessageLogin" @click="isMessageLogin = false">
         <i class="iconfont icon-user"></i> 使用账号登录
       </button>
-      <button v-if="activeName === 'account'">
+      <button v-else @click="isMessageLogin = true">
         <i class="iconfont icon-msg"></i> 使用短信登录
       </button>
     </div>
     <div class="form">
       <!-- 账户登录 -->
-      <template v-if="activeName === 'account'">
-        <form @submit="accountFormSubmit">
+      <template v-if="!isMessageLogin">
+        <form @submit="onAccountFormSubmit">
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-user"></i>
               <input
-                type="text"
-                placeholder="请输入用户名"
-                v-model="accountField"
+                  type="text"
+                  placeholder="请输入用户名"
+                  v-model="accountField"
               />
             </div>
             <div class="error">
-              <i class="iconfont icon-warning" v-if="isAgreeErrorMessage">{{
-                accountErrorMessage
-              }}</i>
+              <i class="iconfont icon-warning" v-if="accountErrorMessage">{{
+                  accountErrorMessage
+                }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-lock"></i>
               <input
-                type="password"
-                placeholder="请输入密码"
-                v-model="passwordField"
+                  type="password"
+                  placeholder="请输入密码"
+                  v-model="passwordField"
               />
             </div>
             <div class="error">
               <i class="iconfont icon-warning" v-if="passwordErrorMessage">{{
-                passwordErrorMessage
-              }}</i>
+                  passwordErrorMessage
+                }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="agree">
-              <XtxCheckbox v-model="isAgreeField" />
+              <XtxCheckbox v-model="isAgreeField"/>
               <span>我已同意</span>
               <a href="javascript:">《隐私条款》</a>
               <span>和</span>
@@ -52,45 +52,45 @@
             </div>
             <div class="error">
               <i class="iconfont icon-warning" v-if="isAgreeErrorMessage">{{
-                isAgreeErrorMessage
-              }}</i>
+                  isAgreeErrorMessage
+                }}</i>
             </div>
           </div>
           <button type="submit" class="btn">登录</button>
         </form>
       </template>
       <!-- 短信登录 -->
-      <template v-if="activeName === 'mobile'">
-        <form>
+      <template v-else>
+        <form @submit="onMessageFormSubmit">
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-user"></i>
-              <input type="text" placeholder="请输入手机号" />
+              <input type="text" placeholder="请输入手机号" v-model="mobileField"/>
             </div>
-            <div class="error">
-              <i class="iconfont icon-warning"></i>
+            <div class="error" v-if="mobileErrorMessage">
+              <i class="iconfont icon-warning">{{ mobileErrorMessage }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-code"></i>
-              <input type="password" placeholder="请输入验证码" />
+              <input type="password" placeholder="请输入验证码" v-model="codeField"/>
               <span class="code">发送验证码</span>
             </div>
-            <div class="error">
-              <i class="iconfont icon-warning"></i>
+            <div class="error" v-if="codeErrorMessage">
+              <i class="iconfont icon-warning">{{ codeErrorMessage }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="agree">
-              <XtxCheckbox />
+              <XtxCheckbox v-model="isMessageAgreeField"/>
               <span>我已同意</span>
               <a href="javascript:">《隐私条款》</a>
               <span>和</span>
               <a href="javascript:">《服务条款》</a>
             </div>
-            <div class="error">
-              <i class="iconfont icon-warning"></i>
+            <div class="error" v-if="isMessageAgreeErrorMessage">
+              <i class="iconfont icon-warning">{{isMessageAgreeErrorMessage}}</i>
             </div>
           </div>
           <button type="submit" class="btn">登录</button>
@@ -99,8 +99,8 @@
     </div>
     <div class="action">
       <img
-        src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
-        alt=""
+          src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
+          alt=""
       />
       <div class="url">
         <a href="javascript:">忘记密码</a>
@@ -111,9 +111,9 @@
 </template>
 
 <script lang="ts">
-import {account, isAgree, password} from "@/utils/vee-validate-schema.ts";
-import {useField, useForm} from "vee-validate";
-import {defineComponent} from "vue";
+import {account, isAgree, password, mobile, code} from "@/utils/vee-validate-schema.ts";
+import {useField, useForm} from "vee-validate/";
+import {defineComponent, ref} from "vue";
 
 export default defineComponent({
   name: "LoginForm",
@@ -124,14 +124,33 @@ export default defineComponent({
     },
   },
   setup() {
+
+    const isMessageLogin = ref<Boolean>(false)
+
     const {
       accountFormSubmit,
       ...accountFormField
     } = useAccountFormValidate();
 
+    const {
+      messageFormSubmit,
+      ...messageFormField
+    } = useMessageFormValidate()
+
+    const onAccountFormSubmit = accountFormSubmit((value) => {
+      console.log(value);
+    });
+
+    const onMessageFormSubmit = messageFormSubmit((value) => {
+      console.log(value);
+    });
+
     return {
-      accountFormSubmit,
-      ...accountFormField
+      isMessageLogin,
+      onAccountFormSubmit,
+      onMessageFormSubmit,
+      ...accountFormField,
+      ...messageFormField,
     };
   },
 });
@@ -165,6 +184,36 @@ function useAccountFormValidate() {
     isAgreeField,
     isAgreeErrorMessage,
   };
+}
+
+function useMessageFormValidate() {
+  // 创建表单验证对象
+  const {handleSubmit: messageFormSubmit} = useForm({
+    validationSchema: {
+      mobile,
+      code,
+      isAgree,
+    },
+  });
+
+  const {value: mobileField, errorMessage: mobileErrorMessage} =
+      useField("mobile");
+
+  const {value: codeField, errorMessage: codeErrorMessage} =
+      useField("code");
+
+  const {value: isMessageAgreeField, errorMessage: isMessageAgreeErrorMessage} =
+      useField("isAgree");
+
+  return {
+    messageFormSubmit,
+    isMessageAgreeField,
+    isMessageAgreeErrorMessage,
+    mobileField,
+    mobileErrorMessage,
+    codeField,
+    codeErrorMessage,
+  }
 }
 </script>
 
