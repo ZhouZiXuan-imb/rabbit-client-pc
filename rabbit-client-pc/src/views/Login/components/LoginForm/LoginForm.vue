@@ -16,35 +16,35 @@
             <div class="input">
               <i class="iconfont icon-user"></i>
               <input
-                  type="text"
-                  placeholder="请输入用户名"
-                  v-model="accountField"
+                type="text"
+                placeholder="请输入用户名"
+                v-model="accountField"
               />
             </div>
             <div class="error">
               <i class="iconfont icon-warning" v-if="accountErrorMessage">{{
-                  accountErrorMessage
-                }}</i>
+                accountErrorMessage
+              }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-lock"></i>
               <input
-                  type="password"
-                  placeholder="请输入密码"
-                  v-model="passwordField"
+                type="password"
+                placeholder="请输入密码"
+                v-model="passwordField"
               />
             </div>
             <div class="error">
               <i class="iconfont icon-warning" v-if="passwordErrorMessage">{{
-                  passwordErrorMessage
-                }}</i>
+                passwordErrorMessage
+              }}</i>
             </div>
           </div>
           <div class="form-item">
             <div class="agree">
-              <XtxCheckbox v-model="isAgreeField"/>
+              <XtxCheckbox v-model="isAgreeField" />
               <span>我已同意</span>
               <a href="javascript:">《隐私条款》</a>
               <span>和</span>
@@ -52,8 +52,8 @@
             </div>
             <div class="error">
               <i class="iconfont icon-warning" v-if="isAgreeErrorMessage">{{
-                  isAgreeErrorMessage
-                }}</i>
+                isAgreeErrorMessage
+              }}</i>
             </div>
           </div>
           <button type="submit" class="btn">登录</button>
@@ -65,7 +65,11 @@
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-user"></i>
-              <input type="text" placeholder="请输入手机号" v-model="mobileField"/>
+              <input
+                type="text"
+                placeholder="请输入手机号"
+                v-model="mobileField"
+              />
             </div>
             <div class="error" v-if="mobileErrorMessage">
               <i class="iconfont icon-warning">{{ mobileErrorMessage }}</i>
@@ -74,8 +78,14 @@
           <div class="form-item">
             <div class="input">
               <i class="iconfont icon-code"></i>
-              <input type="password" placeholder="请输入验证码" v-model="codeField"/>
-              <span class="code">发送验证码</span>
+              <input
+                type="password"
+                placeholder="请输入验证码"
+                v-model="codeField"
+              />
+              <span class="code" :class="{disabled: isActive}" @click="getMsgCode">{{
+                isActive ? `重新发送${count}秒` : "发送验证码"
+              }}</span>
             </div>
             <div class="error" v-if="codeErrorMessage">
               <i class="iconfont icon-warning">{{ codeErrorMessage }}</i>
@@ -83,14 +93,16 @@
           </div>
           <div class="form-item">
             <div class="agree">
-              <XtxCheckbox v-model="isMessageAgreeField"/>
+              <XtxCheckbox v-model="isMessageAgreeField" />
               <span>我已同意</span>
               <a href="javascript:">《隐私条款》</a>
               <span>和</span>
               <a href="javascript:">《服务条款》</a>
             </div>
             <div class="error" v-if="isMessageAgreeErrorMessage">
-              <i class="iconfont icon-warning">{{isMessageAgreeErrorMessage}}</i>
+              <i class="iconfont icon-warning">{{
+                isMessageAgreeErrorMessage
+              }}</i>
             </div>
           </div>
           <button type="submit" class="btn">登录</button>
@@ -98,10 +110,13 @@
       </template>
     </div>
     <div class="action">
-      <img
-          src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
-          alt=""
-      />
+      <a href="https://graph.qq.com/oauth2.0/show?which=Login&display=pc&client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback">
+              <img
+                src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
+                alt=""
+                @click=""
+              />
+      </a>
       <div class="url">
         <a href="javascript:">忘记密码</a>
         <a href="javascript:">免费注册</a>
@@ -111,9 +126,23 @@
 </template>
 
 <script lang="ts">
-import {account, isAgree, password, mobile, code} from "@/utils/vee-validate-schema.ts";
-import {useField, useForm} from "vee-validate/";
-import {defineComponent, ref} from "vue";
+import {
+  account,
+  code,
+  isAgree,
+  mobile,
+  password,
+} from "@/utils/vee-validate-schema.ts";
+import { useField, useForm } from "vee-validate/";
+import { defineComponent, onMounted, ref } from "vue";
+import {
+  getMobileLoginCode,
+  loginByAccountAndPassword,
+  loginByMobileAndCode,
+} from "@/api/loginAPI";
+import { useLoginAfter } from "@/hook/useLoginAfter/useLoginAfter";
+import { Message } from "@/components/library/Message";
+import { useCountDown } from "@/hook/useCountDown/useCountDown";
 
 export default defineComponent({
   name: "LoginForm",
@@ -125,25 +154,55 @@ export default defineComponent({
   },
   setup() {
 
-    const isMessageLogin = ref<Boolean>(false)
+    const isMessageLogin = ref<Boolean>(false);
 
-    const {
-      accountFormSubmit,
-      ...accountFormField
-    } = useAccountFormValidate();
+    // 解构出封装的定时器的方法
+    const { count, isActive, start } = useCountDown();
 
-    const {
-      messageFormSubmit,
-      ...messageFormField
-    } = useMessageFormValidate()
+    const { accountFormSubmit, ...accountFormField } = useAccountFormValidate();
+
+    const { messageFormSubmit, getMobileIsValidate, ...messageFormField } =
+      useMessageFormValidate();
+
+    // 解构出登录成功和登录失败的方法
+    const { loginSuccess, loginFailed } = useLoginAfter();
 
     const onAccountFormSubmit = accountFormSubmit((value) => {
-      console.log(value);
+      // 调用登录接口获取token和其他用户信息
+      loginByAccountAndPassword({
+        account: value.account,
+        password: value.password,
+      })
+        .then(loginSuccess)
+        .catch(loginFailed);
     });
 
     const onMessageFormSubmit = messageFormSubmit((value) => {
-      console.log(value);
+      loginByMobileAndCode({ mobile: value.mobile, code: value.code })
+        .then(loginSuccess)
+        .catch(loginFailed);
     });
+
+    // 获取验证码
+    async function getMsgCode() {
+      if (isActive.value) return;
+
+      // 获取手机号，判断手机号是否填写
+      const { isValid, mobile } = await getMobileIsValidate();
+
+      // 判断手机号是否已经填写了
+      if (isValid) {
+        try {
+          // 发起请求获取验证码
+          await getMobileLoginCode({ mobile: mobile as string });
+
+          Message({ type: "success", text: "验证码发送成功" });
+          start(60);
+        } catch (error) {
+          Message({ type: "error", text: "验证码发送失败" });
+        }
+      }
+    }
 
     return {
       isMessageLogin,
@@ -151,6 +210,9 @@ export default defineComponent({
       onMessageFormSubmit,
       ...accountFormField,
       ...messageFormField,
+      getMsgCode,
+      count,
+      isActive,
     };
   },
 });
@@ -158,7 +220,7 @@ export default defineComponent({
 // 账号登录表单验证
 function useAccountFormValidate() {
   // 创建表单验证对象
-  const {handleSubmit: accountFormSubmit} = useForm({
+  const { handleSubmit: accountFormSubmit } = useForm({
     validationSchema: {
       account,
       password,
@@ -166,14 +228,14 @@ function useAccountFormValidate() {
     },
   });
 
-  const {value: accountField, errorMessage: accountErrorMessage} =
-      useField("account");
+  const { value: accountField, errorMessage: accountErrorMessage } =
+    useField("account");
 
-  const {value: passwordField, errorMessage: passwordErrorMessage} =
-      useField("password");
+  const { value: passwordField, errorMessage: passwordErrorMessage } =
+    useField("password");
 
-  const {value: isAgreeField, errorMessage: isAgreeErrorMessage} =
-      useField("isAgree");
+  const { value: isAgreeField, errorMessage: isAgreeErrorMessage } =
+    useField("isAgree");
 
   return {
     accountFormSubmit,
@@ -186,9 +248,10 @@ function useAccountFormValidate() {
   };
 }
 
+// 手机号登录表单验证
 function useMessageFormValidate() {
   // 创建表单验证对象
-  const {handleSubmit: messageFormSubmit} = useForm({
+  const { handleSubmit: messageFormSubmit } = useForm({
     validationSchema: {
       mobile,
       code,
@@ -196,24 +259,40 @@ function useMessageFormValidate() {
     },
   });
 
-  const {value: mobileField, errorMessage: mobileErrorMessage} =
-      useField("mobile");
+  const {
+    value: mobileField,
+    errorMessage: mobileErrorMessage,
+    validate: mobileValidate,
+  } = useField("mobile");
 
-  const {value: codeField, errorMessage: codeErrorMessage} =
-      useField("code");
+  const { value: codeField, errorMessage: codeErrorMessage } = useField("code");
 
-  const {value: isMessageAgreeField, errorMessage: isMessageAgreeErrorMessage} =
-      useField("isAgree");
+  const {
+    value: isMessageAgreeField,
+    errorMessage: isMessageAgreeErrorMessage,
+  } = useField("isAgree");
+
+  // 验证手机号的方法
+  async function getMobileIsValidate() {
+    // 验证手机号，获取验证结果
+    const { valid } = await mobileValidate();
+    // 返回验证结果
+    return {
+      isValid: valid,
+      mobile: mobileField.value,
+    };
+  }
 
   return {
     messageFormSubmit,
+    getMobileIsValidate,
     isMessageAgreeField,
     isMessageAgreeErrorMessage,
     mobileField,
     mobileErrorMessage,
     codeField,
     codeErrorMessage,
-  }
+  };
 }
 </script>
 

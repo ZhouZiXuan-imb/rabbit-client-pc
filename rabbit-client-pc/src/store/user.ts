@@ -37,7 +37,7 @@ export default {
                 // 用户手机号
                 mobile: "",
                 // 用户登录凭证
-                token: "test",
+                token: "",
             },
         }
     },

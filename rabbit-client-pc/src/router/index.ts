@@ -7,6 +7,8 @@ const TopCategoryPage = () => import('@/views/Category/TopCategory/TopCategory.v
 const SubCategoryPage = () => import('@/views/Category/SubCagetory/SubCategory.vue')
 const GoodsDetailPage = () => import("@/views/goods/GoodsDetailPage/GoodsDetailPage.vue")
 const Login = () => import("@/views/Login/Login.vue")
+// QQ登录授权之后绑定账号的页面
+const LoginCallbackPage = import("@/views/Login/components/LoginCallbackPage/LoginCallbackPage.vue")
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -33,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/login',
         name: 'Login',
         component: Login,
+    },
+    {
+        path: '/login/callback',
+        name: 'LoginCallbackPage',
+        component: LoginCallbackPage,
     }
 ]
 

@@ -24,15 +24,13 @@ export type stateType = {
     }
 }
 
+let baseURL = "http://pcapi-xiaotuxian-front-devtest.itheima.net/"
+
 // 不带token的axios实例
-const instanceWidthOutToken = axios.create({
-    baseURL: "https://apipc-xiaotuxian-front.itheima.net/"
-})
+const instanceWidthOutToken = axios.create({baseURL})
 
 // 带token的axios实例
-const instanceWidthToken = axios.create({
-    baseURL: "https://apipc-xiaotuxian-front.itheima.net/"
-})
+const instanceWidthToken = axios.create({baseURL})
 
 // 请求、响应成功时的回调函数
 const onResponseFulfilled = (response: AxiosResponse) => {

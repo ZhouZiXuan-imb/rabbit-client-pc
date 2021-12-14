@@ -1,4 +1,5 @@
 import lazy from "@/components/directive/lazy.ts"
+import {Message} from "@/components/library/Message";
 
 // require.context是nodejs的一个方法,这个方法只有在vue中支持
 const importFn = require.context('./', true, /\.vue/);
@@ -14,5 +15,6 @@ export default {
         })
 
         app.directive('lazy', lazy)
+        app.config.globalProperties.$message = Message;
     }
 }

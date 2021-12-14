@@ -4,7 +4,7 @@
       <ul>
         <template v-if="isLogin">
           <li>
-            <a href="javascript:"><i class="iconfont icon-user"></i>周杰伦</a>
+            <a href="javascript:"><i class="iconfont icon-user"></i>{{$store.state['user'].profile.account}}</a>
           </li>
           <li><a href="javascript:" @click="logout">退出登录</a></li>
         </template>
@@ -27,27 +27,43 @@
 <script>
 import {computed, defineComponent} from "vue";
 import {useStore} from "vuex";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "AppTopNav",
   setup() {
     const store = useStore();
+    const router = useRouter();
     const isLogin = computed(() => store.state.user.profile.token);
 
     // 退出登录
     function logout() {
-      store.dispatch('user/useSetState', {token: ""});
+      store.dispatch('user/useSetState', {
+        // 用户id
+        id: "",
+        // 用户头像
+        avatar: "",
+        // 用户昵称
+        nickname: "",
+        // 用户账号
+        account: "",
+        // 用户手机号
+        mobile: "",
+        // 用户登录凭证
+        token: "",
+      });
+      router.push('/login')
     }
-
-    // 登录
-    function login() {
-      store.dispatch('user/useSetState', {token:"test"})
-    }
+    //
+    // // 登录
+    // function login() {
+    //   store.dispatch('user/useSetState', {token:"test"})
+    // }
 
     return {
       isLogin,
       logout,
-      login,
+      // login,
     }
   }
 })
