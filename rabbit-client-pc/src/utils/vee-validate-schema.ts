@@ -14,6 +14,15 @@ export function password(value:string) {
     return true
 }
 
+export function repeatPassword(value: string,{form}:{form:{password: string}}) {
+    if(!value) return '请输入密码';
+    if (!/^\w{5,23}$/.test(value)){
+        return '密码必须在6-24个字符之间';
+    }
+    if (value !== form.password) return '两次密码不一致';
+    return true;
+}
+
 export function mobile(value:string) {
     if(!value) return '请输入手机号';
     if (!/^1[3-9]\d{9}$/.test(value)){
