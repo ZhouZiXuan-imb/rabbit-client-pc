@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, EmitsOptions} from "vue";
+import { defineComponent } from "vue";
 import powerSet from "@/vendor/power-set.ts";
 
 export default defineComponent({
@@ -43,10 +43,10 @@ export default defineComponent({
       default: "",
     },
   },
-  setup(props,{emit}) {
+  setup(props, { emit }) {
     const { pathMap } = createPathMap(props.skus as any);
 
-    sendDataToParent(props.skus,props.specs,emit, pathMap);
+    sendDataToParent(props.skus, props.specs, emit, pathMap);
     // 初始化时调用选中默认规格方法
     setDefaultSelected(props.skuId, props.skus, props.specs);
     // 初始化时执行一次禁用按钮方法，禁用没有库存的规格按钮
@@ -70,7 +70,7 @@ export default defineComponent({
 
       updateDisabled(props.specs as any, pathMap as any);
       setDefaultSelected(props.skuId, props.skus, props.specs);
-      sendDataToParent(props.skus,props.specs,emit, pathMap);
+      sendDataToParent(props.skus, props.specs, emit, pathMap);
     }
 
     return {
@@ -182,38 +182,66 @@ function setDefaultSelected(
 ) {
   if (!skuId) return;
   // 根据skuId找到默认选中规格的对象，然后遍历其中==对象中的specs，返回规格名称数组
-  const target:[string] = skus
+  const target: [string] = skus
     .find((item) => item.id === skuId)
     .specs.map((spec: any) => spec.valueName);
 
   specs.forEach((spec) => {
-    spec.values.forEach((value: { name: string; picture: string | null; desc: string; disabled: boolean; selected:boolean }) => {
-      if(target.includes(value.name)) {
-        value.selected = true;
+    spec.values.forEach(
+      (value: {
+        name: string;
+        picture: string | null;
+        desc: string;
+        disabled: boolean;
+        selected: boolean;
+      }) => {
+        if (target.includes(value.name)) {
+          value.selected = true;
+        }
       }
-    });
+    );
   });
 }
 
 // 把用户选中的规格数据传给父组件，购物车中要使用
 function sendDataToParent(
-    skus: Array<any>,
-    specs: Array<any>,
-    emit: any,
-    pathMap: {[key: string]: string | null}
+  skus: Array<any>,
+  specs: Array<any>,
+  emit: any,
+  pathMap: { [key: string]: string | null }
 ) {
-    // 获取到用户选择的规格数组，找到值不为undefined的集合
-  const selected = getUserSelected(specs).filter((item:any) => item);
+  // 获取到用户选择的规格数组，找到值不为undefined的集合
+  const selected = getUserSelected(specs).filter((item: any) => item);
 
   // 获取有多少个规格
   const max = specs.length;
   // 判断用户是否选择了所有规格
-  if(selected.length === max) {
+  if (selected.length === max) {
     // 直接找到pathMap中包含的当前选中的skuId
-    const skuId = pathMap[selected.join('_')];
+    const skuId = pathMap[selected.join("_")];
     // 根据skuId找到skus对象
-    const target = skus.find((item:any) => item.id === skuId);
+    const target = skus.find((item: any) => item.id === skuId);
 
+    emit("onSpecChanged", {
+      // 商品的规格ID, 将商品加入购物车时使用
+      skuId,
+      // 商品的现价 (更新视图)
+      price: target.price,
+      // 商品原价 (更新视图)
+      oldPrice: target.oldPrice,
+      // 商品的库存, 在用户选择商品数量的时候使用
+      inventory: target.inventory,
+      // 用户选择的规格名称字符串
+      attrsText: target.specs
+        .map(
+          (spec: { name: string; valueName: string }) =>
+            `${spec.name}: ${spec.valueName}`
+        )
+        .join(" "),
+    });
+  } else {
+    // 当用户选择的不是一个完整规格的时候, 告诉父组件清除 skuId
+    emit("onSpecHalfChanged");
   }
 }
 </script>

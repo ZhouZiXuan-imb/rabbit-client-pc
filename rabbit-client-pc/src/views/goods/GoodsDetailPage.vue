@@ -35,6 +35,7 @@
             :specs="goodsList?.specs"
             :skus="goodsList?.skus"
             @onSpecChanged="onSpecChanged"
+            @onSpecHalfChanged="goodsList.currentSelectSkuId = null"
           />
 
           <XtxNumberBox
@@ -43,7 +44,7 @@
             v-model="goodsNumCount"
           ></XtxNumberBox>
 
-          <XtxButton type="primary" style="margin-top: 15px"
+          <XtxButton type="primary" style="margin-top: 15px" @click="addCart"
             >加入购物车
           </XtxButton>
         </div>
@@ -66,9 +67,7 @@
           <GoodsHot :type="2" />
           <GoodsHot :type="3" />
         </div>
-
       </div>
-
     </div>
   </AppLayout>
 </template>
@@ -88,6 +87,8 @@ import { defineComponent, provide, ref } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { getGoodsDetail } from "@/api/goodsAPI";
 import { goodsDetailType } from "@/type/goodsDetailType";
+import { Message } from "@/components/library/Message";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "GoodsDetailPage",
@@ -107,8 +108,55 @@ export default defineComponent({
     let goodsNumCount = ref<number>(1);
 
     // 子组件中用户选择了规格调用方法获取到更新后的值
-    function onSpecChanged(skus: any) {
-      // console.log(skus)
+    function onSpecChanged(data: any) {
+      // 将商品价格存储到goodsList中
+      goodsList.value!.price = data.price;
+      // 将商品库存数量存储到goodsList中
+      goodsList.value!.inventory = data.inventory;
+      goodsList.value!.oldPrice = data.oldPrice;
+      goodsList.value!.currentSelectSkuId = data.skuId;
+      goodsList.value!.currentSelectSpecsText = data.attrsText;
+    }
+
+    const store = useStore();
+
+    function addCart() {
+      console.log(goodsList.value?.currentSelectSkuId);
+      if (!goodsList.value?.currentSelectSkuId)
+        return Message({ type: "error", text: "请选择商品规格" });
+      // 声明商品参数集合
+      const goodsParams = {
+        // 商品id
+        id: goodsList.value!.id,
+        // 商品 skuId
+        skuId: goodsList.value!.currentSelectSkuId,
+        // 商品名称
+        name: goodsList.value!.name,
+        // 商品规格属性文字
+        attrsText: goodsList.value!.currentSelectSpecsText,
+        // 商品图片
+        picture: goodsList.value!.mainPictures[0],
+        // 商品原价
+        price: goodsList.value!.oldPrice,
+        // 商品现价
+        nowPrice: goodsList.value!.price,
+        // 是否选中
+        selected: true,
+        // 商品库存
+        stock: goodsList.value!.inventory,
+        // 用户选择的商品数量
+        count: goodsNumCount.value,
+        // 如果用户选择了规格, 该商品就一定是有效商品, 因为能够选择的规格都是有库存的
+        isEffective: true,
+      };
+      // 商品参数收集完后存储到vuex中
+      store.dispatch("cart/useAddCartGoods", goodsParams)
+        .then(() => {
+          Message({ type: "success", text: "商品已经添加到购物车" });
+        })
+        .catch((error) => {
+          Message({ type: "error", text: `${error.response.data.message}` });
+        });
     }
 
     provide("goodsList", goodsList);
@@ -117,6 +165,7 @@ export default defineComponent({
       goodsList,
       onSpecChanged,
       goodsNumCount,
+      addCart,
     };
   },
 });
@@ -149,6 +198,7 @@ function useGoods() {
 
   return {
     goodsList,
+    getGoods,
   };
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="xtx-number-box">
-    <div class="label">数量</div>
+    <div class="label"><slot></slot></div>
     <div class="number-box">
       <a href="javascript:" @click="onChangeNum(-1)">-</a>
       <input type="text" readonly v-model="goodsNumCount"/>
@@ -34,7 +34,6 @@ export default defineComponent({
 
     function onChangeNum(number: number) {
       const nextNumber = goodsNumCount.value + number;
-      console.log(nextNumber)
       if(nextNumber < 1) {
         goodsNumCount.value = 1
       } else if(nextNumber > props.inventory!) {

@@ -71,4 +71,6 @@ export type goodsDetailType = {
     spuCode: string;
     userAddresses: any
     videoScale: number;
+    currentSelectSkuId: string;
+    currentSelectSpecsText: string;
 };
