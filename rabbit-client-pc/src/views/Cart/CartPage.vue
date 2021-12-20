@@ -52,26 +52,27 @@
               <tr>
                 <td colspan="6"><h3 class="tit">失效商品</h3></td>
               </tr>
-              <tr v-for="i in 3" :key="i">
+              <tr
+                v-for="invalidGoods in effectiveInvalidGoodsList"
+                :key="invalidGoods.id"
+              >
                 <td></td>
                 <td>
                   <div class="goods">
-                    <RouterLink to="/"
-                      ><img
-                        src="https://yanxuan-item.nosdn.127.net/13ab302f8f2c954d873f03be36f8fb03.png"
-                        alt=""
+                    <RouterLink :to="`/goods/detail/${invalidGoods.id}`"
+                      ><img :src="invalidGoods.picture" alt=""
                     /></RouterLink>
                     <div>
                       <p class="name ellipsis">
-                        和手足干裂说拜拜 手足皲裂修复霜
+                        {{ invalidGoods.name }}
                       </p>
-                      <p class="attr">颜色：粉色 尺寸：14cm 产地：中国</p>
+                      <!--                      <p class="attr">{{ invalidGoods.attrs }}</p>-->
                     </div>
                   </div>
                 </td>
-                <td class="tc"><p>&yen;200.00</p></td>
+                <td class="tc"><p>&yen;{{ invalidGoods.nowPrice }}</p></td>
                 <td class="tc">1</td>
-                <td class="tc"><p>&yen;200.00</p></td>
+                <td class="tc"><p>&yen;{{Number(invalidGoods.nowPrice) * invalidGoods.count}}</p></td>
                 <td class="tc">
                   <p><a class="green" href="javascript:">删除</a></p>
                   <p><a href="javascript:">找相似</a></p>
@@ -100,13 +101,29 @@
     </div>
   </AppLayout>
 </template>
-<script>
+<script lang="ts">
 import GoodsRelevant from "@/views/goods/components/GoodsRelevant/GoodsRelevant.vue";
 import AppLayout from "@/components/AppLayout/AppLayout.vue";
-export default {
+
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+
+export default defineComponent({
   name: "CartPage",
   components: { GoodsRelevant, AppLayout },
-};
+  setup() {
+    const store = useStore();
+
+    // 无效商品列表
+    let effectiveInvalidGoodsList = computed(
+      () => store.getters["cart/effectiveInvalidGoodsList"]
+    );
+
+    return {
+      effectiveInvalidGoodsList,
+    };
+  },
+});
 </script>
 <style scoped lang="less">
 .tc {
