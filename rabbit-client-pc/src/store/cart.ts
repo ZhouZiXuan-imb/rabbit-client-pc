@@ -1,6 +1,8 @@
 import { ActionContext } from "vuex";
 import {updateLocalCart} from "@/api/cartAPI";
+import {AxiosResponse} from "axios";
 
+// 当个商品的类型
 type cartGoodsItemType = {
   // 商品id
   id: string;
@@ -25,15 +27,48 @@ type cartGoodsItemType = {
   // 是否为有效商品
   isEffective: boolean;
 };
+// 商品集合的类型
 type cartGoodsType = Array<cartGoodsItemType>;
 
+//State数据的类型
 type StateType = { goodsList: cartGoodsType };
 
+// getters中的属性的类型
 type GettersType = {
   effectiveGoodsList: cartGoodsType;
   effectiveGoodsPrice: number;
   effectiveGoodsCount: number;
+  userSelectedGoodsList: Array<cartGoodsItemType>;
+  effectiveGoodsSelectedAll: boolean;
 };
+
+// 单个商品的可选属性类型
+type GoodsItemType = {
+  // 商品id
+  id?: string;
+  // 商品 skuId
+  skuId?: string;
+  // 商品名称
+  name?: string;
+  // 商品规格属性文字
+  attrsText?: string;
+  // 商品图片
+  picture?: string;
+  // 商品原价
+  price?: string;
+  // 商品现价
+  nowPrice?: string;
+  // 是否选中
+  selected?: boolean;
+  // 商品库存
+  stock?: number;
+  // 用户选择的商品数量
+  count?: number;
+  // 是否为有效商品
+  isEffective?: boolean;
+};
+
+
 export default {
   // 开启命名空间
   namespaced: true,
@@ -73,7 +108,17 @@ export default {
      * @param state
      * @param partGoods 数据变更的商品集合
      */
-    updateGoodsBySkuId(state: StateType, partGoods: cartGoodsType) {},
+    updateGoodsBySkuId(state: StateType, partGoods: cartGoodsItemType) {
+      // 更新商品数据
+      // 找到更新后与skuId相同的商品
+      let index = state.goodsList.findIndex(item => item.skuId === partGoods.skuId);
+
+      // 判断有没有更新的商品
+      if(index !== -1) {
+        // 找到要更新的商品后，重新给这个商品赋值
+        state.goodsList[index] = {...state.goodsList[index], ...partGoods};
+      }
+    },
   },
   actions: {
     useAddCartGoods(context: ActionContext<any, any>, goods: cartGoodsItemType) {
@@ -97,7 +142,7 @@ export default {
       }
     },
     // 更新购物车中的商品
-    useUpdateGoodsBySkuId(context: ActionContext<any, any>) {
+    useUpdateGoodsList(context: ActionContext<any, any>) {
       // 判断用户是否登录
       if(context.rootState.user.profile.token) {
         // 已登录
@@ -105,12 +150,28 @@ export default {
         // 未登录
         // 遍历购物车中的商品获取skuId,发起请求
         const cartListPromises = context.state.goodsList.map((goods:cartGoodsItemType) => {
-          updateLocalCart({skuId:goods.skuId, id:goods.id});
+          return updateLocalCart({skuId:goods.skuId, id:goods.id});
         })
 
-        console.log(cartListPromises)
+        Promise.all(cartListPromises).then((dataCollection:any) => {
+          dataCollection.forEach((item: AxiosResponse, index: number) => {
+            // 为数据添加skuId
+            item.data.result.skuId = context.state.goodsList[index].skuId;
+            // 更新本地商品数据
+            context.commit('updateGoodsBySkuId', item.data.result);
+          })
+        })
       }
     },
+    // 根据商品skuId更新商品的方法
+    useUpdateGoodsBySkuId(context: ActionContext<any, any>, goods:GoodsItemType) {
+      if (context.rootState.user.profile.token) {
+        // 已登录
+      } else {
+        // 未登录
+        context.commit('updateGoodsBySkuId', goods)
+      }
+    }
   },
   getters: {
     // 无效商品列表
@@ -140,5 +201,13 @@ export default {
         0
       );
     },
+    // 用户选择了的商品集合
+    userSelectedGoodsList(state: StateType, getter: GettersType) {
+      return state.goodsList.filter(item => item.selected);
+    },
+    // 判断所有商品是否全部选中
+    selectedAllButtonStatus(state:StateType, getters: GettersType) {
+      return getters.effectiveGoodsList.length > 0 && getters.userSelectedGoodsList.length === getters.effectiveGoodsList.length;
+    }
   },
 };

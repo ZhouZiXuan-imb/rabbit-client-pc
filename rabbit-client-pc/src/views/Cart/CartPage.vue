@@ -10,7 +10,7 @@
           <table>
             <thead>
               <tr>
-                <th><XtxCheckbox>全选</XtxCheckbox></th>
+                <th><XtxCheckbox :modelValue="selectedAllButtonStatus" @update:modelValue="selectAllGoods($event)" >全选</XtxCheckbox></th>
                 <th>商品信息</th>
                 <th>单价</th>
                 <th>数量</th>
@@ -21,7 +21,7 @@
             <!-- 有效商品 -->
             <tbody>
               <tr v-for="goods in $store.state['cart'].goodsList" :key="goods">
-                <td><XtxCheckbox /></td>
+                <td><XtxCheckbox :modelValue="goods.selected" @update:modelValue="selectGoods(goods.skuId, $event)" /></td>
                 <td>
                   <div class="goods">
                     <RouterLink :to="`/goods/detail/${goods.id}`"
@@ -107,6 +107,7 @@ import AppLayout from "@/components/AppLayout/AppLayout.vue";
 
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
+import {Message} from "@/components/library/Message";
 
 export default defineComponent({
   name: "CartPage",
@@ -119,8 +120,30 @@ export default defineComponent({
       () => store.getters["cart/effectiveInvalidGoodsList"]
     );
 
+    store.dispatch('cart/useUpdateGoodsList').then(() => {
+      Message({type: "success", text: "购物车商品更新成功"})
+    })
+
+    // 点击商品复选框按钮的方法
+    function selectGoods(skuId:string, isSelected: boolean) {
+      // 调用根据skuId更新单个商品数据的方法
+      store.dispatch('cart/useUpdateGoodsBySkuId', {skuId, selected: isSelected});
+    }
+
+    // 全选按钮的选中状态
+    const selectedAllButtonStatus = computed(() => store.getters["cart/selectedAllButtonStatus"])
+
+    // 点击全选按钮的方法
+    function selectAllGoods(isSelected: boolean) {
+      // 点击全选按钮后，把所有商品的选中状态更新为全选按钮的状态
+      console.log(isSelected)
+    }
+
     return {
       effectiveInvalidGoodsList,
+      selectedAllButtonStatus,
+      selectGoods,
+      selectAllGoods,
     };
   },
 });
