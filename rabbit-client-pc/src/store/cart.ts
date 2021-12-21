@@ -171,6 +171,12 @@ export default {
         // 未登录
         context.commit('updateGoodsBySkuId', goods)
       }
+    },
+    // 更新所有商品的selected属性
+    useUpdateAllGoodsSelected(context:ActionContext<any, any>, selected: boolean) {
+      context.getters.effectiveGoodsList.forEach((item: GoodsItemType) => {
+        context.commit('updateGoodsBySkuId', {skuId: item.skuId, selected})
+      })
     }
   },
   getters: {
@@ -202,7 +208,7 @@ export default {
       );
     },
     // 用户选择了的商品集合
-    userSelectedGoodsList(state: StateType, getter: GettersType) {
+    userSelectedGoodsList(state: StateType) {
       return state.goodsList.filter(item => item.selected);
     },
     // 判断所有商品是否全部选中
