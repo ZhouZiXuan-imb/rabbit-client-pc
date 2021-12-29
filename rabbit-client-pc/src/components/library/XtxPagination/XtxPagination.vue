@@ -15,7 +15,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent} from "vue";
 import { useVModel } from "@vueuse/core";
 
 export default defineComponent({
@@ -35,8 +35,6 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const startButtonFlag = ref(true);
-    const endButtonFlag = ref(false);
 
     // 声明变量存储当前是第几页
     const currentPage = useVModel(props, "page", emit);
@@ -94,8 +92,6 @@ export default defineComponent({
         totalPage,
         start,
         end,
-        startButtonFlag,
-        endButtonFlag,
       };
     });
 
