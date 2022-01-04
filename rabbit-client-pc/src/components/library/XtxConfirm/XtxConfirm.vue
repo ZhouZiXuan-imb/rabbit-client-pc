@@ -10,8 +10,8 @@
         <span>{{ content }}</span>
       </div>
       <div class="footer">
-        <XtxButton size="mini" type="gray">取消</XtxButton>
-        <XtxButton size="mini" type="primary">确认</XtxButton>
+        <XtxButton size="mini" type="gray" @click="onCancelButtonClickHandler">取消</XtxButton>
+        <XtxButton size="mini" type="primary" @click="onSureButtonClickHandler">确认</XtxButton>
       </div>
     </div>
   </div>
@@ -30,6 +30,12 @@ export default {
       type: String,
       default: "",
     },
+    onSureButtonClickHandler:{
+      type:Function
+    },
+    onCancelButtonClickHandler:{
+      type:Function
+    }
   },
 };
 </script>

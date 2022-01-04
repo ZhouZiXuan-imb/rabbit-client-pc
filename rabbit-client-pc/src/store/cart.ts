@@ -35,11 +35,13 @@ type StateType = { goodsList: cartGoodsType };
 
 // getters中的属性的类型
 type GettersType = {
+  effectiveInvalidGoodsList:cartGoodsType;
   effectiveGoodsList: cartGoodsType;
   effectiveGoodsPrice: number;
   effectiveGoodsCount: number;
-  userSelectedGoodsList: Array<cartGoodsItemType>;
-  effectiveGoodsSelectedAll: boolean;
+  userSelectedGoodsList: cartGoodsType;
+  selectedAllButtonStatus:boolean;
+  selectedGoodsPriceCount: number;
 };
 
 // 单个商品的可选属性类型
@@ -67,7 +69,6 @@ type GoodsItemType = {
   // 是否为有效商品
   isEffective?: boolean;
 };
-
 
 export default {
   // 开启命名空间
@@ -119,6 +120,10 @@ export default {
         state.goodsList[index] = {...state.goodsList[index], ...partGoods};
       }
     },
+    // 批量删除商品
+    batchRemoveCartGoods(state:StateType) {
+      state.goodsList = state.goodsList.filter(item => !item.selected);
+    },
   },
   actions: {
     useAddCartGoods(context: ActionContext<any, any>, goods: cartGoodsItemType) {
@@ -140,6 +145,10 @@ export default {
         // 未登录
         context.commit("removeCartGoods", goodsSkuId);
       }
+    },
+    // 批量删除商品
+    useBatchRemoveCartGoods(context: ActionContext<any, any>) {
+      context.commit('batchRemoveCartGoods');
     },
     // 更新购物车中的商品
     useUpdateGoodsList(context: ActionContext<any, any>) {
@@ -179,6 +188,7 @@ export default {
       })
     }
   },
+
   getters: {
     // 无效商品列表
     effectiveInvalidGoodsList(state: StateType) {
@@ -214,6 +224,18 @@ export default {
     // 判断所有商品是否全部选中
     selectedAllButtonStatus(state:StateType, getters: GettersType) {
       return getters.effectiveGoodsList.length > 0 && getters.userSelectedGoodsList.length === getters.effectiveGoodsList.length;
+    },
+    // 计算购物车中选中商品的价格
+    selectedGoodsPriceCount(state:StateType, getters:GettersType) {
+      let count = 0;
+
+       getters.effectiveGoodsList.filter(item => {
+        if (item.selected) {
+          count += Number(item.nowPrice) * item.count;
+        }
+      })
+
+      return count.toFixed(2);
     }
   },
 };

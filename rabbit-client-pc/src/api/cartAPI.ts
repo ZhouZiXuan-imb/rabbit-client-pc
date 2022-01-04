@@ -9,3 +9,6 @@ import {requestWidthToken} from "@/utils/request";
 export function updateLocalCart({skuId, id}: {skuId:string; id:string}) {
     return requestWidthToken.get(`/goods/stock/${skuId}`, {id});
 }
+export function getCartGoodsSku(skuId:string) {
+    return requestWidthToken.get(`/goods/sku/${skuId}`);
+}
