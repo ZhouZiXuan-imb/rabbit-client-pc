@@ -1,6 +1,7 @@
 import { ActionContext } from "vuex";
 import {updateLocalCart} from "@/api/cartAPI";
 import {AxiosResponse} from "axios";
+import {cartNewSku} from "@/type/cartType";
 
 // 当个商品的类型
 type cartGoodsItemType = {
@@ -88,13 +89,11 @@ export default {
       );
       // 找到相同规格的商品了
       if (index > -1) {
-        console.log(111);
         // 给当前商品数量+1
         state.goodsList[index].count += 1;
         // 并且让这个商品移动到购物车列表的第一个，可以使用splice方法把这个商品剪切掉，splice直接修改原数组，所以就不用自己手动删除了，然后再使用unshift方法添加到数组的第一个
         state.goodsList.unshift(state.goodsList.splice(index, 1)[0]);
       } else {
-        console.log(222);
         state.goodsList.unshift(goods);
       }
     },
@@ -183,9 +182,41 @@ export default {
     },
     // 更新所有商品的selected属性
     useUpdateAllGoodsSelected(context:ActionContext<any, any>, selected: boolean) {
-      context.getters.effectiveGoodsList.forEach((item: GoodsItemType) => {
-        context.commit('updateGoodsBySkuId', {skuId: item.skuId, selected})
-      })
+
+      if (context.rootState.user.profile.token) {
+        // 已登录
+      } else {
+        // 未登录
+        // 如果没有登录，直接修改store/cart中的数据
+        // 未登录
+        context.getters.effectiveGoodsList.forEach((item: GoodsItemType) => {
+          context.commit('updateGoodsBySkuId', {skuId: item.skuId, selected})
+        })
+      }
+    },
+    // 根据skuId修改购物车中的商品参数
+    useUpdateGoodsOfCartBySkuId(context: ActionContext<any, any>, {oldSkuId, newSku}: {oldSkuId:string, newSku:cartNewSku}) {
+      let index = context.state.goodsList.findIndex((item: cartGoodsItemType) => item.skuId === oldSkuId)
+      console.log(index);
+      if (context.rootState.user.profile.token) {
+        // 已登陆
+      } else {
+        // 未登录
+        // 删除旧商品
+        // 构建新的商品
+        const newGoods = {
+          ...context.state.goodsList[index],
+          skuId: newSku.skuId,
+          stock: newSku.inventory,
+          oldPrice: newSku.oldPrice,
+          nowPrice: newSku.price,
+          attrsText: newSku.attrsText,
+        };
+        // 删除旧商品
+        context.commit("removeCartGoods", oldSkuId);
+        // 插入新商品
+        context.commit("addCartGoods", newGoods);
+      }
     }
   },
 

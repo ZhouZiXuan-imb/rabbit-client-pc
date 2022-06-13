@@ -1,6 +1,7 @@
 // 这些文件都是webpack执行的，相当于node代码，所以使用的都是commonjs模块规范
 const path = require('path')
 module.exports = {
+    publicPath: './',
     pluginOptions: {
         'style-resources-loader': {
             preProcessor: 'less',
@@ -15,7 +16,7 @@ module.exports = {
             .rule("images")
             .use("url-loader")
             .loader("url-loader")
-            .tap((options) => Object.assign(options, { limit: 10000 })),
+            .tap((options) => Object.assign(options, { limit: 10000 }))
         // 禁用域名检查
         config.devServer.disableHostCheck(true)
     },

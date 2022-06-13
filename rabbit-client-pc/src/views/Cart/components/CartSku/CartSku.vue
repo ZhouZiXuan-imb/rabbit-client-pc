@@ -6,8 +6,20 @@
     </div>
     <div class="layer" v-if="isShow">
       <div class="loading" v-if="isLoading"></div>
-      <GoodsSku v-if="!isLoading && specsAndSkus" :skuId="skuId" :specs="specsAndSkus?.specs" :skus="specsAndSkus?.skus" @onSpecChanged="onSpecChanged"></GoodsSku>
-      <XtxButton @click="submitSku" v-if="specsAndSkus" type="primary" size="mini" style="margin-left: 60px">
+      <GoodsSku
+        v-if="!isLoading && specsAndSkus"
+        :skuId="skuId"
+        :specs="specsAndSkus?.specs"
+        :skus="specsAndSkus?.skus"
+        @onSpecChanged="onSpecChanged"
+      ></GoodsSku>
+      <XtxButton
+        @click="submitSku"
+        v-if="specsAndSkus"
+        type="primary"
+        size="mini"
+        style="margin-left: 60px"
+      >
         确定
       </XtxButton>
     </div>
@@ -19,7 +31,10 @@ import GoodsSku from "@/views/goods/components/GoodsSku/GoodsSku.vue";
 import { defineComponent, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { getCartGoodsSku } from "@/api/cartAPI";
-import {goodsDetailType} from "@/type/goodsDetailType";
+import { goodsDetailType } from "@/type/goodsDetailType";
+import { Message } from "@/components/library/Message";
+import { useStore } from "vuex";
+import { cartNewSku } from "@/type/cartType";
 
 export default defineComponent({
   name: "CartSku",
@@ -32,8 +47,8 @@ export default defineComponent({
       type: String,
     },
   },
-  components:{
-    GoodsSku
+  components: {
+    GoodsSku,
   },
   setup(props) {
     // 声明显示/隐藏下拉框变量
@@ -42,9 +57,9 @@ export default defineComponent({
     let target = ref(null);
 
     type skusAndSpecsType = {
-      skus: goodsDetailType['skus'];
-      specs: goodsDetailType['specs']
-    }
+      skus: goodsDetailType["skus"];
+      specs: goodsDetailType["specs"];
+    };
 
     // 供用户选择的规格选择数据 所有可组合的规格组合
     let specsAndSkus = ref<skusAndSpecsType>();
@@ -56,13 +71,15 @@ export default defineComponent({
       isShow.value = true;
       // 发起请求前显示加载动画
       isLoading.value = true;
-      getData().then(({ data: { result } }: { data: { result: skusAndSpecsType } }) => {
-        // 数据获取完成后关闭加载动画显示数据
-        isLoading.value = false;
+      getData().then(
+        ({ data: { result } }: { data: { result: skusAndSpecsType } }) => {
+          // 数据获取完成后关闭加载动画显示数据
+          isLoading.value = false;
 
-        specsAndSkus.value = result;
-        console.log(specsAndSkus.value)
-      });
+          specsAndSkus.value = result;
+          console.log(specsAndSkus.value);
+        }
+      );
     }
 
     // 隐藏下拉框的方法
@@ -84,12 +101,26 @@ export default defineComponent({
       return getCartGoodsSku(props.skuId!);
     }
 
-    function submitSku() {
-
-    }
+    // 接收更新后存储的sku集合
+    let newSku: cartNewSku;
+    const store = useStore();
 
     function onSpecChanged(sku: any) {
-      console.log(sku,'aaaSku')
+      newSku = sku;
+    }
+
+    // 点击确认按钮
+    function submitSku() {
+      // 判断newSku是否存在，或者newSku存在但是参数并没有修改
+      if (!newSku || (newSku && newSku.skuId === props.skuId)) {
+        Message({ type: "warn", text: "规格数据没有发生变化" });
+        return;
+      }
+
+      store.dispatch("cart/useUpdateGoodsOfCartBySkuId", {
+        oldSkuId: props.skuId,
+        newSku,
+      });
     }
 
     return {

@@ -61,13 +61,14 @@ export default defineComponent({
         value.selected = false;
       } else {
         // 如果点击的规格选中了，当前规格数组中的所有规格都改为不选中
-        spec.values.forEach((item: any) => (item.selected = false));
+        spec.values.forEach((item: any) => {
+          item.selected = false;
+        });
         // 再给当前点击的规格选中
         value.selected = true;
       }
 
       updateDisabled(props.specs as any, pathMap as any);
-      setDefaultSelected(props.skuId, props.skus, props.specs);
       sendDataToParent(props.skus, props.specs, emit, pathMap);
     }
 
